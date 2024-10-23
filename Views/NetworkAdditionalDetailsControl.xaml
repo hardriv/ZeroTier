@@ -1,0 +1,48 @@
+<UserControl x:Class="ZeroTier.Views.NetworkAdditionalDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel Margin="10">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Type : " FontWeight="Bold" Grid.Row="0" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkType" Grid.Row="0" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="Route : " FontWeight="Bold" Grid.Row="1" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkRoute" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="IP Start : " FontWeight="Bold" Grid.Row="2" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkIpStart" Grid.Row="2" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="IP End : " FontWeight="Bold" Grid.Row="3" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkIpEnd" Grid.Row="3" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="IP V4 Activé : " FontWeight="Bold" Grid.Row="4" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkIpV4Enabled" Grid.Row="4" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="IP V6 Activé : " FontWeight="Bold" Grid.Row="5" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkIpV6Enabled" Grid.Row="5" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="DNS : " FontWeight="Bold" Grid.Row="6" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkDns" Grid.Row="6" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="SSO Activé : " FontWeight="Bold" Grid.Row="7" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkSsoEnabled" Grid.Row="7" Grid.Column="1" Margin="5,5,0,0"/>
+        </Grid>
+    </StackPanel>
+</UserControl>

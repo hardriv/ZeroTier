@@ -1,0 +1,25 @@
+<UserControl x:Class="ZeroTier.Views.NetworkListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ZeroTier.Views">
+    <DataGrid x:Name="NetworksGrid" 
+        AutoGenerateColumns="False" 
+        Margin="10"
+        SelectionChanged="NetworksGrid_SelectionChanged"
+        CanUserAddRows="False">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="110"/>
+            <DataGridTextColumn Header="Name" Binding="{Binding Config.Name}" Width="180"/>
+            <DataGridTextColumn Header="Route" Binding="{Binding Config.Routes[0].Target}" Width="120"/>
+            <DataGridTemplateColumn Header="Actions" Width="50">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Click="DeleteNetwork_Click" Width="20" Height="20">
+                            <Image Source="pack://application:,,,/Resources/delete-20.png" Width="20" Height="20" />
+                        </Button>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

@@ -1,0 +1,79 @@
+<UserControl x:Class="ZeroTier.Views.MembersListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ZeroTier.Views">
+
+    <StackPanel Margin="10">
+        <TextBlock Text="Members List" FontWeight="Bold" FontSize="14"/>
+
+        <!-- Boutons sur une seule ligne avec des icônes -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
+            <!-- Checkbox de sélection globale -->
+            <CheckBox x:Name="SelectAllCheckBox" Content="Select All" VerticalAlignment="Center" Margin="0,0,20,0" 
+                      Click="SelectAllCheckBox_Click"/>
+            <!-- Authorize Button -->
+            <Button x:Name="AuthorizeSelection" Width="30" Height="30" Click="AuthorizeMembers_Click" Margin="0,0,10,0">
+                <Image Source="pack://application:,,,/Resources/authorize-20.png" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Button>
+            <!-- Deny Button -->
+            <Button x:Name="DenySelection" Width="30" Height="30" Click="DenyMembers_Click" Margin="0,0,10,0">
+                <Image Source="pack://application:,,,/Resources/deny-20.png" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Button>
+            <!-- Delete Button -->
+            <Button x:Name="DeleteSelection" Width="30" Height="30" Click="DeleteMembers_Click" Margin="0,0,10,0">
+                <Image Source="pack://application:,,,/Resources/delete-20.png" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Button>
+        </StackPanel>
+        
+        <!-- DataGrid pour la liste des membres -->
+        <DataGrid Name="MembersDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="Select" Binding="{Binding IsSelected, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="NodeId" Binding="{Binding NodeId}"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="IP Assignment" Binding="{Binding Config.IpAssignment}"/>
+                <DataGridTextColumn Header="Do not auto assign IP" Binding="{Binding Config.NoAutoAssignIps}"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Config.Authorized, Converter={StaticResource StatusConverter}}"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+                <DataGridTextColumn Header="Creation" Binding="{Binding Config.CreationTime}"/>
+                <DataGridTextColumn Header="Last Online" Binding="{Binding LastOnline}"/>
+                <DataGridTextColumn Header="Last Seen" Binding="{Binding LastSeen}"/>
+                <DataGridTextColumn Header="Last Authorized" Binding="{Binding Config.LastAuthorizedTime}"/>
+                <DataGridTextColumn Header="Last Deauthorized" Binding="{Binding Config.LastDeauthorizedTime}"/>
+                <DataGridTextColumn Header="Physical Address" Binding="{Binding PhysicalAddress}"/>
+                <DataGridTextColumn Header="Client Version" Binding="{Binding ClientVersion}"/>
+                <DataGridTextColumn Header="SSO exempt" Binding="{Binding Config.SsoExempt}"/>
+                <DataGridTextColumn Header="Allow ethernet bridging" Binding="{Binding Config.ActiveBridge}"/>
+                
+                <DataGridTemplateColumn Header="Actions">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Edit Button -->
+                                <Button Click="EditMember_Click" Width="30" Height="30" Margin="0,0,5,0">
+                                    <Image Source="pack://application:,,,/Resources/edit-20.png" Width="20" Height="20"/>
+                                </Button>
+
+                                <!-- Authorize Button -->
+                                <Button Click="AuthorizeMember_Click" Width="30" Height="30" Margin="0,0,5,0">
+                                    <Image Source="pack://application:,,,/Resources/authorize-20.png" Width="20" Height="20"/>
+                                </Button>
+
+                                <!-- Deny Button -->
+                                <Button Click="DenyMember_Click" Width="30" Height="30" Margin="0,0,5,0">
+                                    <Image Source="pack://application:,,,/Resources/deny-20.png" Width="20" Height="20"/>
+                                </Button>
+
+                                <!-- Delete Button -->
+                                <Button Click="DeleteMember_Click" Width="30" Height="30" Margin="0,0,5,0">
+                                    <Image Source="pack://application:,,,/Resources/delete-20.png" Width="20" Height="20"/>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>

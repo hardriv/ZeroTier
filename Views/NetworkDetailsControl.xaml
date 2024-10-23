@@ -1,0 +1,48 @@
+<UserControl x:Class="ZeroTier.Views.NetworkDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel Margin="10">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="ID : " FontWeight="Bold" Grid.Row="0" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkId" Grid.Row="0" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="Nom : " FontWeight="Bold" Grid.Row="1" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkName" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="Privé : " FontWeight="Bold" Grid.Row="2" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkPrivate" Grid.Row="2" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="Créé le : " FontWeight="Bold" Grid.Row="3" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkCreationTime" Grid.Row="3" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="Modifié le : " FontWeight="Bold" Grid.Row="4" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkModifiedTime" Grid.Row="4" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="Membres en ligne : " FontWeight="Bold" Grid.Row="5" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkOnline" Grid.Row="5" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="Membres autorisés : " FontWeight="Bold" Grid.Row="6" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkAuthorized" Grid.Row="6" Grid.Column="1" Margin="5,5,0,0"/>
+
+            <TextBlock Text="Total des membres : " FontWeight="Bold" Grid.Row="7" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NetworkTotal" Grid.Row="7" Grid.Column="1" Margin="5,5,0,0"/>
+        </Grid>
+    </StackPanel>
+</UserControl>
