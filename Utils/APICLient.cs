@@ -1,7 +1,9 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace ZeroTier.Utils
 {
@@ -11,6 +13,13 @@ namespace ZeroTier.Utils
         private string ApiToken = string.Empty;
 
         private HttpClient client;
+
+        // Options JSON avec la stratégie camelCase
+        private readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,  // Applique camelCase
+            WriteIndented = false  // Pour une sortie compacte
+        };
 
         public APIClient()
         {
@@ -28,15 +37,17 @@ namespace ZeroTier.Utils
         public async Task<HttpResponseMessage> GetAsync(string endpoint)
         {
             var response = await client.GetAsync(endpoint);
-            HandleErrors(response); // Gestion des erreurs
+            HandleErrors(response);
             return response;
         }
 
         // Méthode POST
         public async Task<HttpResponseMessage> PostAsync(string endpoint, HttpContent content)
         {
-            var response = await client.PostAsync(endpoint, content);
-            HandleErrors(response); // Gestion des erreurs
+            HttpContent jsonContent = JsonContent.Create(content, null, jsonOptions);
+            var response = await client.PostAsync(endpoint, jsonContent);
+            // Gestion des erreurs
+            HandleErrors(response);
             return response;
         }
 
@@ -44,12 +55,13 @@ namespace ZeroTier.Utils
         public async Task<HttpResponseMessage> DeleteAsync(string endpoint)
         {
             var response = await client.DeleteAsync(endpoint);
-            HandleErrors(response); // Gestion des erreurs
+            // Gestion des erreurs
+            HandleErrors(response);
             return response;
         }
 
         // Méthode pour gérer les erreurs HTTP
-        private void HandleErrors(HttpResponseMessage response)
+        private static void HandleErrors(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {

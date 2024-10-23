@@ -9,14 +9,18 @@ namespace ZeroTier.Views
 {
     public partial class NetworkListControl : UserControl
     {
-        private APIClient apiClient;
+        private APIClient apiClient = new();
+        private readonly DataGrid networksGrid;
+
         public DataGrid MembersGrid { get; set; } = new DataGrid();
         public event EventHandler<NetworkViewModel> NetworkSelected;
 
         public NetworkListControl()
         {
             InitializeComponent();
-            NetworksGrid.SelectionChanged += NetworksGrid_SelectionChanged;
+
+            networksGrid = (DataGrid)FindName("NetworksGrid");
+            networksGrid.SelectionChanged += NetworksGrid_SelectionChanged;
         }
         
         // Si tu as besoin de passer l'APIClient, fais-le par une méthode ou propriété
@@ -25,9 +29,9 @@ namespace ZeroTier.Views
             this.apiClient = apiClient;
         }
 
-        private async void NetworksGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void NetworksGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (NetworksGrid.SelectedItem is NetworkViewModel selectedNetwork)
+            if (networksGrid.SelectedItem is NetworkViewModel selectedNetwork)
             {
                 NetworkSelected?.Invoke(this, selectedNetwork);
             }
@@ -46,7 +50,7 @@ namespace ZeroTier.Views
                     if (isDeleted)
                     {
                         var networks = await NetworkService.GetNetworks(apiClient);
-                        NetworksGrid.ItemsSource = networks;
+                        networksGrid.ItemsSource = networks;
                     }
                     else
                     {

@@ -3,30 +3,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ZeroTier.Views">
 
-    <StackPanel Margin="10">
-        <TextBlock Text="Members List" FontWeight="Bold" FontSize="14"/>
+    <Grid Margin="10" VerticalAlignment="Center">
+        <!-- 2 Colonnes, une pour les boutons d'action et l'autre pour la pagination -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" /> <!-- La première colonne s'étire -->
+            <ColumnDefinition Width="Auto" /> <!-- La seconde colonne est ajustée à la taille des boutons -->
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+
+        <TextBlock Text="Members List" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" FontWeight="Bold" FontSize="14"/>
 
         <!-- Boutons sur une seule ligne avec des icônes -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Margin="0,10,0,0">
             <!-- Checkbox de sélection globale -->
             <CheckBox x:Name="SelectAllCheckBox" Content="Select All" VerticalAlignment="Center" Margin="0,0,20,0" 
                       Click="SelectAllCheckBox_Click"/>
             <!-- Authorize Button -->
-            <Button x:Name="AuthorizeSelection" Width="30" Height="30" Click="AuthorizeMembers_Click" Margin="0,0,10,0">
-                <Image Source="pack://application:,,,/Resources/authorize-20.png" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="AuthorizeSelection" Width="24" Height="24" Click="AuthorizeMembers_Click" Margin="0,0,10,0">
+                <Image Source="pack://application:,,,/Resources/authorize-20.png" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Button>
             <!-- Deny Button -->
-            <Button x:Name="DenySelection" Width="30" Height="30" Click="DenyMembers_Click" Margin="0,0,10,0">
-                <Image Source="pack://application:,,,/Resources/deny-20.png" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="DenySelection" Width="24" Height="24" Click="DenyMembers_Click" Margin="0,0,10,0">
+                <Image Source="pack://application:,,,/Resources/deny-20.png" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Button>
             <!-- Delete Button -->
-            <Button x:Name="DeleteSelection" Width="30" Height="30" Click="DeleteMembers_Click" Margin="0,0,10,0">
-                <Image Source="pack://application:,,,/Resources/delete-20.png" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="DeleteSelection" Width="24" Height="24" Click="DeleteMembers_Click" Margin="0,0,10,0">
+                <Image Source="pack://application:,,,/Resources/delete-20.png" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Button>
+        </StackPanel>
+
+        <!-- Boutons de pagination -->
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="PreviousPage" VerticalAlignment="Center" Content="Previous" Click="PreviousPage_Click" IsEnabled="False" Margin="5"/>
+            <TextBlock x:Name="PageInfo" VerticalAlignment="Center" Text="Page 1" Margin="5"/>
+            <Button x:Name="NextPage" VerticalAlignment="Center" Content="Next" Click="NextPage_Click" IsEnabled="False" Margin="5"/>
         </StackPanel>
         
         <!-- DataGrid pour la liste des membres -->
-        <DataGrid Name="MembersDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0">
+        <DataGrid x:Name="MembersDataGrid" AutoGenerateColumns="False" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="0,10,0,0">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="Select" Binding="{Binding IsSelected, Mode=TwoWay}"/>
                 <DataGridTextColumn Header="NodeId" Binding="{Binding NodeId}"/>
@@ -51,23 +71,23 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <!-- Edit Button -->
-                                <Button Click="EditMember_Click" Width="30" Height="30" Margin="0,0,5,0">
-                                    <Image Source="pack://application:,,,/Resources/edit-20.png" Width="20" Height="20"/>
+                                <Button Click="EditMember_Click" Width="24" Height="24" Margin="0,0,5,0">
+                                    <Image Source="pack://application:,,,/Resources/edit-20.png" Width="16" Height="16"/>
                                 </Button>
 
                                 <!-- Authorize Button -->
-                                <Button Click="AuthorizeMember_Click" Width="30" Height="30" Margin="0,0,5,0">
-                                    <Image Source="pack://application:,,,/Resources/authorize-20.png" Width="20" Height="20"/>
+                                <Button Click="AuthorizeMember_Click" Width="24" Height="24" Margin="0,0,5,0">
+                                    <Image Source="pack://application:,,,/Resources/authorize-20.png" Width="16" Height="16"/>
                                 </Button>
 
                                 <!-- Deny Button -->
-                                <Button Click="DenyMember_Click" Width="30" Height="30" Margin="0,0,5,0">
-                                    <Image Source="pack://application:,,,/Resources/deny-20.png" Width="20" Height="20"/>
+                                <Button Click="DenyMember_Click" Width="24" Height="24" Margin="0,0,5,0">
+                                    <Image Source="pack://application:,,,/Resources/deny-20.png" Width="16" Height="16"/>
                                 </Button>
 
                                 <!-- Delete Button -->
-                                <Button Click="DeleteMember_Click" Width="30" Height="30" Margin="0,0,5,0">
-                                    <Image Source="pack://application:,,,/Resources/delete-20.png" Width="20" Height="20"/>
+                                <Button Click="DeleteMember_Click" Width="24" Height="24" Margin="0,0,5,0">
+                                    <Image Source="pack://application:,,,/Resources/delete-20.png" Width="16" Height="16"/>
                                 </Button>
                             </StackPanel>
                         </DataTemplate>
@@ -75,5 +95,5 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-    </StackPanel>
+    </Grid>
 </UserControl>

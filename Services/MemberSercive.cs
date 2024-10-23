@@ -57,10 +57,11 @@ namespace ZeroTier.Services
             return null;
         }
 
-        public static async Task<bool> AuthorizeMember(APIClient apiClient, string networkId, string memberId)
+        public static async Task<bool> AuthorizeMember(APIClient apiClient, MemberViewModel memberViewModel)
         {
-            var content = new StringContent("");
-            HttpResponseMessage response = await apiClient.PostAsync($"network/{networkId}/member/{memberId}/authorize", content);
+            MemberDto memberDto = MemberMapper.MemberToDto(memberViewModel);
+            HttpContent memberJson = JsonContent.Create(memberDto);
+            HttpResponseMessage response = await apiClient.PostAsync($"network/{memberDto.NetworkId}/member/{memberDto.NodeId}", memberJson);
 
             if (response.IsSuccessStatusCode)
             {
@@ -73,10 +74,11 @@ namespace ZeroTier.Services
             }
         }
 
-        public static async Task<bool> DenyMember(APIClient apiClient, string networkId, string memberId)
+        public static async Task<bool> DenyMember(APIClient apiClient, MemberViewModel memberViewModel)
         {
-            var content = new StringContent("");
-            HttpResponseMessage response = await apiClient.PostAsync($"network/{networkId}/member/{memberId}/deny", content);
+            MemberDto memberDto = MemberMapper.MemberToDto(memberViewModel);
+            HttpContent memberJson = JsonContent.Create(memberDto);
+            HttpResponseMessage response = await apiClient.PostAsync($"network/{memberDto.NetworkId}/member/{memberDto.NodeId}", memberJson);
 
             if (response.IsSuccessStatusCode)
             {
@@ -89,9 +91,11 @@ namespace ZeroTier.Services
             }
         }
 
-        public static async Task<bool> UpdateMember(APIClient apiClient, string networkId, string memberId, MemberViewModel member)
+        public static async Task<bool> UpdateMember(APIClient apiClient, MemberViewModel memberViewModel)
         {
-            HttpResponseMessage response = await apiClient.PostAsync($"network/{networkId}/member/{memberId}", JsonContent.Create(member));
+            MemberDto memberDto = MemberMapper.MemberToDto(memberViewModel);
+            HttpContent memberJson = JsonContent.Create(memberDto);
+            HttpResponseMessage response = await apiClient.PostAsync($"network/{memberViewModel.NetworkId}/member/{memberViewModel.NodeId}", memberJson);
 
             if (response.IsSuccessStatusCode)
             {

@@ -8,33 +8,54 @@ namespace ZeroTier.Views
 {
     public partial class NetworkAdditionalDetailsControl : UserControl
     {
+        private readonly TextBlock networkType;
+        private readonly TextBlock networkRoute;
+        private readonly TextBlock networkIpStart;
+        private readonly TextBlock networkIpEnd;
+        private readonly TextBlock networkIpV4Enabled;
+        private readonly TextBlock networkIpV6Enabled;
+        private readonly TextBlock networkDns;
+        private readonly TextBlock networkSsoEnabled;
+
         public NetworkAdditionalDetailsControl()
         {
             InitializeComponent();
+
+            networkType = (TextBlock)FindName("NetworkType");
+            networkRoute = (TextBlock)FindName("NetworkRoute");
+            networkIpStart = (TextBlock)FindName("NetworkIpStart");
+            networkIpEnd = (TextBlock)FindName("NetworkIpEnd");
+            networkIpV4Enabled = (TextBlock)FindName("NetworkIpV4Enabled");
+            networkIpV6Enabled = (TextBlock)FindName("NetworkIpV6Enabled");
+            networkDns = (TextBlock)FindName("NetworkDns");
+            networkSsoEnabled = (TextBlock)FindName("NetworkSsoEnabled");
         }
 
         public void DisplayNetworkAdditionalDetails(NetworkViewModel network)
         {
-            if (network == null) return;
+            if (network == null || network.Config == null)
+            {
+                return;
+            }
 
-            NetworkType.Text = $"{network.Type}";
+            networkType.Text = $"{network.Type}";
             
-            if (NullController.IsCollectionValid(network.Config?.Routes))
+            if (NullController.IsCollectionValid(network.Config.Routes))
             {
-                NetworkRoute.Text = $"{NullController.GetSafeValue(network.Config.Routes[0].Target)}";
+                networkRoute.Text = $"{NullController.GetSafeValue(network.Config.Routes[0].Target)}";
             }
 
 
-            if (NullController.IsCollectionValid(network.Config?.IpAssignmentPools))
+            if (NullController.IsCollectionValid(network.Config.IpAssignmentPools))
             {
-                NetworkIpStart.Text = $"{NullController.GetSafeValue(network.Config.IpAssignmentPools[0].IpRangeStart)}";
-                NetworkIpEnd.Text = $"{NullController.GetSafeValue(network.Config.IpAssignmentPools[0].IpRangeEnd)}";
+                networkIpStart.Text = $"{NullController.GetSafeValue(network.Config.IpAssignmentPools[0].IpRangeStart)}";
+                networkIpEnd.Text = $"{NullController.GetSafeValue(network.Config.IpAssignmentPools[0].IpRangeEnd)}";
             }
 
-            NetworkIpV4Enabled.Text = $"{network.Config.V4AssignMode.Zt}";
-            NetworkIpV6Enabled.Text = $"{network.Config.V6AssignMode.Zt}";
-            NetworkDns.Text = $"{network.Config.Dns.Domain}";
-            NetworkSsoEnabled.Text = $"{network.Config.SsoConfig.Enabled}";
+            networkIpV4Enabled.Text = $"{network.Config.V4AssignMode.Zt}";
+            networkIpV6Enabled.Text = $"{network.Config.V6AssignMode.Zt}";
+            networkDns.Text = $"{network.Config.Dns.Domain}";
+            networkSsoEnabled.Text = $"{network.Config.SsoConfig.Enabled}";
         }
     }
 }
