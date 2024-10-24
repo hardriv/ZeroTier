@@ -12,16 +12,16 @@ namespace ZeroTier.Views
     public partial class MembersListControl : UserControl
     {
         private APIClient apiClient = new();
-        public DataGrid membersDataGrid;
+        public DataGrid membersDataGrid = new();
         private readonly Button authorizeSelection;
         private readonly Button denySelection;
         private readonly Button deleteSelection;
         private readonly TextBlock pageInfoTextBlock;
         private readonly Button previousPageButton;
         private readonly Button nextPageButton;
-        private List<MemberViewModel> allMembers = new(); // Liste complète des membres
+        private List<MemberViewModel> allMembers = []; // Liste complète des membres
         private int currentPage = 1;
-        private readonly int pageSize = 500;
+        private readonly int pageSize = 22;
 
         public MembersListControl()
         {
@@ -46,7 +46,7 @@ namespace ZeroTier.Views
         public async Task LoadMembers(string networkId)
         {
             // var members = await MemberService.GetMembers(apiClient, networkId);
-            allMembers = await MemberService.GetMembers(apiClient, networkId);
+            allMembers = await MemberService.GetMembers(apiClient, networkId); // TODO corriger le warning null
 
             if (allMembers != null)
             {

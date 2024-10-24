@@ -13,9 +13,9 @@ namespace ZeroTier
 {
     public partial class MainWindow : Window
     {
-        private readonly APIClient apiClient = new APIClient();
-        public NetworkSectionControl networkSectionControl;
-        private readonly MembersListControl membersListControl;
+        private readonly APIClient apiClient = new();
+        public NetworkSectionControl networkSectionControl = new();
+        private readonly MembersListControl membersListControl = new();
         private readonly TextBlock errorText;
         public TextBox ApiTokenTextBox;
         public Button connectButton;
@@ -33,7 +33,7 @@ namespace ZeroTier
             membersListControl.Initialize(apiClient);
 
             // Abonnement à l'événement
-            networkSectionControl.NetworkSelected += OnNetworkSelected;
+            networkSectionControl.NetworkSelected += OnNetworkSelected; // TODO corriger le warning null
 
             errorText = (TextBlock)FindName("ErrorText");
         }
@@ -87,7 +87,7 @@ namespace ZeroTier
                 if (networks != null)
                 {
                     networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");                    
-                    networkSectionControl.networkListControl.NetworksGrid.ItemsSource = networks;
+                    networkSectionControl.networkListControl.networksGrid.ItemsSource = networks;
                 }
                 else
                 {

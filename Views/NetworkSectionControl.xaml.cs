@@ -11,10 +11,10 @@ namespace ZeroTier.Views
     public partial class NetworkSectionControl : UserControl
     {
         private APIClient apiClient = new();
-        public NetworkListControl networkListControl;
-        public NetworkDetailsControl networkDetailsControl;
-        public NetworkAdditionalDetailsControl networkAdditionalDetailsControl;
-        public event EventHandler<NetworkViewModel> NetworkSelected;
+        public NetworkListControl networkListControl = new();
+        public NetworkDetailsControl networkDetailsControl = new();
+        public NetworkAdditionalDetailsControl networkAdditionalDetailsControl = new();
+        public event EventHandler<NetworkViewModel> NetworkSelected = delegate { };
 
         public NetworkSectionControl()
         {
@@ -29,7 +29,7 @@ namespace ZeroTier.Views
             }
             else
             {
-                networkListControl.NetworkSelected += OnNetworkSelected;
+                networkListControl.NetworkSelected += OnNetworkSelected; // TODO corriger le warning null
             }
         }
 

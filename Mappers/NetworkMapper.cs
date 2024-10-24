@@ -37,14 +37,14 @@ public static class NetworkMapper
             Config = NetworkConfigToDto(viewModel.Config),
             Description = viewModel.Description,
             RulesSource = viewModel.RulesSource,
-            Permissions = PermissionsToDto(viewModel.Permissions),
+            Permissions = PermissionsToDto(viewModel.Permissions), // TODO corriger le warning null
             OwnerId = viewModel.OwnerId,
             OnlineMemberCount = viewModel.OnlineMemberCount,
             AuthorizedMemberCount = viewModel.AuthorizedMemberCount,
             TotalMemberCount = viewModel.TotalMemberCount,
             CapabilitiesByName = new Dictionary<string, bool>(viewModel.CapabilitiesByName),
             TagsByName = new Dictionary<string, bool>(viewModel.TagsByName),
-            Ui = UiToDto(viewModel.Ui)
+            Ui = UiToDto(viewModel.Ui) // TODO corriger le warning null
         };
     }
     public static NetworkConfigViewModel NetworkConfigToViewModel(NetworkConfigDto dto)
