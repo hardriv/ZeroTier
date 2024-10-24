@@ -31,7 +31,7 @@ namespace ZeroTier.Utils
                     401 => "Erreur : Accès non autorisé (401). Veuillez vérifier votre token API.",
                     403 => "Erreur : Accès refusé (403). Vous n'avez pas les droits nécessaires.",
                     404 => "Erreur : Ressource non trouvée (404).",
-                    >= 500 and < 600 => "Erreur serveurs, veuillez essayer de nouveau plus tard.", // Gérer toutes les erreurs 50X
+                    >= 500 and < 600 => "Erreur serveurs, veuillez essayer de nouveau plus tard.",
                     _ => $"Erreur inattendue (Code: {StatusCode})."
                 };
             }

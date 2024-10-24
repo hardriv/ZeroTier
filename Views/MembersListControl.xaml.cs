@@ -37,7 +37,6 @@ namespace ZeroTier.Views
             nextPageButton = (Button)FindName("NextPage");
         }
         
-        // Si tu as besoin de passer l'APIClient, fais-le par une méthode ou propriété
         public void Initialize(APIClient apiClient)
         {
             this.apiClient = apiClient;
@@ -45,14 +44,12 @@ namespace ZeroTier.Views
 
         public async Task LoadMembers(string networkId)
         {
-            // var members = await MemberService.GetMembers(apiClient, networkId);
             allMembers = await MemberService.GetMembers(apiClient, networkId); // TODO corriger le warning null
 
             if (allMembers != null)
             {
-                UpdatePage(1); // Afficher la première page
+                UpdatePage(1);
                 UpdatePaginationControls();
-                // membersDataGrid.ItemsSource = members;
             }
             else
             {
@@ -106,9 +103,9 @@ namespace ZeroTier.Views
 
             if (membersDataGrid.ItemsSource is List<MemberViewModel> members)
             {
-                foreach (var member in members)
+                foreach (var memberToDelete in members)
                 {
-                    member.IsSelected = isChecked;
+                    memberToDelete.IsSelected = isChecked;
                 }
                 // Met à jour l'affichage pour refléter les changements
                 membersDataGrid.Items.Refresh();
@@ -123,28 +120,77 @@ namespace ZeroTier.Views
             deleteSelection.IsEnabled = hasSelection;
         }
 
-        private async void AuthorizeMembers_Click(object sender, RoutedEventArgs e)
+        private void AuthorizeMembers_Click(object sender, RoutedEventArgs e)
         {
             var selectedMembers = membersDataGrid.SelectedItems.Cast<MemberViewModel>().ToList();
             if (MessageBox.Show("Êtes-vous sûr de vouloir autoriser les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                foreach (var member in selectedMembers)
+                foreach (var memberToUpdate in selectedMembers)
                 {
-                    var success = await MemberService.AuthorizeMember(apiClient, member);
+                    UpdateAuthorizedOrDeniedMember(true, memberToUpdate);
+                }
+
+                // Rafraîchir l'affichage
+                membersDataGrid.Items.Refresh();
+            }
+        }
+
+        private void AuthorizeMember_Click(object sender, RoutedEventArgs e)
+        {
+            if (((Button)sender).DataContext is MemberViewModel memberToUpdate)
+            {
+                if (MessageBox.Show("Êtes-vous sûr de vouloir autoriser ce membre ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    UpdateAuthorizedOrDeniedMember(true, memberToUpdate);
                 }
             }
         }
 
-        private async void DenyMembers_Click(object sender, RoutedEventArgs e)
+        private void DenyMembers_Click(object sender, RoutedEventArgs e)
         {
             var selectedMembers = membersDataGrid.SelectedItems.Cast<MemberViewModel>().ToList();
             if (MessageBox.Show("Êtes-vous sûr de vouloir refuser les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                foreach (var member in selectedMembers)
+                foreach (var memberToUpdate in selectedMembers)
                 {
-                    var success = await MemberService.DenyMember(apiClient, member);
-                    // Afficher un message de succès ou d'erreur selon le résultat
+                    UpdateAuthorizedOrDeniedMember(false, memberToUpdate);
                 }
+
+                // Rafraîchir l'affichage
+                membersDataGrid.Items.Refresh();
+            }
+        }
+
+        private void DenyMember_Click(object sender, RoutedEventArgs e)
+        {
+            if (((Button)sender).DataContext is MemberViewModel memberToUpdate)
+            {
+                if (MessageBox.Show("Êtes-vous sûr de vouloir refuser ce membre ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    UpdateAuthorizedOrDeniedMember(false, memberToUpdate);
+                }
+            }
+        }
+
+        private async void UpdateAuthorizedOrDeniedMember(bool Authorized, MemberViewModel memberToUpdate)
+        {
+            MemberViewModel updatedMember;
+            if (Authorized)
+            {
+                updatedMember = await MemberService.AuthorizeMember(apiClient, memberToUpdate);
+            }
+            else
+            {
+                updatedMember = await MemberService.DenyMember(apiClient, memberToUpdate);
+            }
+
+            if (updatedMember != null)
+            {
+                memberToUpdate.Config.Authorized = updatedMember.Config.Authorized;
+            }
+            else
+            {
+                MessageBox.Show("Erreur lors du chargement du membre");
             }
         }
 
@@ -154,15 +200,41 @@ namespace ZeroTier.Views
             var selectedMembers = membersDataGrid.SelectedItems.Cast<MemberViewModel>().ToList();
             if (MessageBox.Show("Êtes-vous sûr de vouloir supprimer les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                foreach (var member in selectedMembers)
+                foreach (var memberToDelete in selectedMembers)
                 {
-                    success = await MemberService.DeleteMember(apiClient, member.NetworkId, member.NodeId);
+                    success = await MemberService.DeleteMember(apiClient, memberToDelete.NetworkId, memberToDelete.NodeId);
+                    if (success)
+                    {
+                        // Retirer le membre de la liste locale
+                        allMembers.Remove(memberToDelete);
+                    }
                 }
             }
             
-            // Afficher un message de succès ou d'erreur selon le résultat
+            RefreshMembersAfterDelete(success);
+        }
+
+        private async void DeleteMember_Click(object sender, RoutedEventArgs e)
+        {
+            var success = false; 
+            if (((Button)sender).DataContext is MemberViewModel memberToDelete)
+            {
+                if (MessageBox.Show("Êtes-vous sûr de vouloir supprimer ce membre ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    success = await MemberService.DeleteMember(apiClient, memberToDelete.NetworkId, memberToDelete.NodeId);
+                }
+            }            
+            
+            RefreshMembersAfterDelete(success);
+        }
+
+        private void RefreshMembersAfterDelete(bool success)
+        {
             if (success)
             {
+                // Mettre à jour la page pour refléter les changements
+                UpdatePage(currentPage);
+                UpdatePaginationControls();
                 MessageBox.Show("Membres supprimés.");
             }
             else
@@ -173,47 +245,9 @@ namespace ZeroTier.Views
 
         private void EditMember_Click(object sender, RoutedEventArgs e)
         {
-            if (((Button)sender).DataContext is MemberViewModel member)
+            if (((Button)sender).DataContext is MemberViewModel memberToDelete)
             {
                 // Logique pour éditer le membre
-            }
-        }
-
-        private async void AuthorizeMember_Click(object sender, RoutedEventArgs e)
-        {
-            if (((Button)sender).DataContext is MemberViewModel member)
-            {
-                if (MessageBox.Show("Êtes-vous sûr de vouloir autoriser ce membre ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    member.Config.Authorized = true;
-                    var success = await MemberService.AuthorizeMember(apiClient, member);
-                    // Afficher un message de succès ou d'erreur selon le résultat
-                }
-            }
-        }
-
-        private async void DenyMember_Click(object sender, RoutedEventArgs e)
-        {
-            if (((Button)sender).DataContext is MemberViewModel member)
-            {
-                if (MessageBox.Show("Êtes-vous sûr de vouloir refuser ce membre ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    member.Config.Authorized = false;
-                    var success = await MemberService.DenyMember(apiClient, member);
-                    // Afficher un message de succès ou d'erreur selon le résultat
-                }
-            }
-        }
-
-        private async void DeleteMember_Click(object sender, RoutedEventArgs e)
-        {
-            if (((Button)sender).DataContext is MemberViewModel member)
-            {
-                if (MessageBox.Show("Êtes-vous sûr de vouloir supprimer ce membre ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    var success = await MemberService.DeleteMember(apiClient, member.NetworkId, member.NodeId);
-                    // Afficher un message de succès ou d'erreur selon le résultat
-                }
             }
         }
     }
