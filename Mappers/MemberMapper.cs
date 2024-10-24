@@ -23,7 +23,6 @@ namespace ZeroTier.Mappers
                 LastOnline = DateTimeUtils.FromUnixTimeMilliseconds(dto.LastOnline),
                 LastSeen = DateTimeUtils.FromUnixTimeMilliseconds(dto.LastSeen),
                 PhysicalAddress = dto.PhysicalAddress,
-                PhysicalLocation = dto.PhysicalLocation,
                 ClientVersion = dto.ClientVersion,
                 ProtocolVersion = dto.ProtocolVersion,
                 SupportsRulesEngine = dto.SupportsRulesEngine,
@@ -48,7 +47,6 @@ namespace ZeroTier.Mappers
                 LastOnline = DateTimeUtils.ToUnixTimeMilliseconds(viewModel.LastOnline),
                 LastSeen = DateTimeUtils.ToUnixTimeMilliseconds(viewModel.LastSeen),
                 PhysicalAddress = viewModel.PhysicalAddress,
-                PhysicalLocation = viewModel.PhysicalLocation,
                 ClientVersion = viewModel.ClientVersion,
                 ProtocolVersion = viewModel.ProtocolVersion,
                 SupportsRulesEngine = viewModel.SupportsRulesEngine
@@ -95,7 +93,7 @@ namespace ZeroTier.Mappers
                 CreationTime = DateTimeUtils.ToUnixTimeMilliseconds(viewModel.CreationTime),
                 Id = viewModel.Id,
                 Identity = viewModel.Identity,
-                IpAssignments = new List<string> { viewModel.IpAssignment },
+                IpAssignments = [viewModel.IpAssignment],
                 LastAuthorizedTime = DateTimeUtils.ToUnixTimeMilliseconds(viewModel.LastAuthorizedTime),
                 LastDeauthorizedTime = DateTimeUtils.ToUnixTimeMilliseconds(viewModel.LastDeauthorizedTime),
                 NoAutoAssignIps = viewModel.NoAutoAssignIps,
@@ -115,7 +113,7 @@ namespace ZeroTier.Mappers
 
         public static List<MemberViewModel> MembersToModels(List<MemberDto> dtos)
         {
-            List<MemberViewModel> viewModels = new List<MemberViewModel>();
+            List<MemberViewModel> viewModels = [];
             foreach (MemberDto dto in dtos)
             {
                 MemberViewModel viewModel = MemberToViewModel(dto);
@@ -126,7 +124,7 @@ namespace ZeroTier.Mappers
 
         public static List<MemberConfigViewModel> MemberConfigsToModels(List<MemberConfigDto> dtos)
         {
-            List<MemberConfigViewModel> viewModels = new List<MemberConfigViewModel>();
+            List<MemberConfigViewModel> viewModels = [];
             foreach (MemberConfigDto dto in dtos)
             {
                 MemberConfigViewModel viewModel = MemberConfigToViewModel(dto);
@@ -137,7 +135,7 @@ namespace ZeroTier.Mappers
 
         public static List<MemberDto> MembersToDtos(List<MemberViewModel> viewModels)
         {
-            List<MemberDto> dtos = new List<MemberDto>();
+            List<MemberDto> dtos = [];
             foreach (MemberViewModel viewModel in viewModels)
             {
                 MemberDto dto = MemberToDto(viewModel);
@@ -148,7 +146,7 @@ namespace ZeroTier.Mappers
 
         public static List<MemberConfigDto> MemberConfigsToDtos(List<MemberConfigViewModel> viewModels)
         {
-            List<MemberConfigDto> dtos = new List<MemberConfigDto>();
+            List<MemberConfigDto> dtos = [];
             foreach (MemberConfigViewModel viewModel in viewModels)
             {
                 MemberConfigDto dto = MemberConfigToDto(viewModel);

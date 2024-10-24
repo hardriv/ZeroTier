@@ -8,12 +8,13 @@ using ZeroTier.ViewModels.MemberModels;
 using System.Windows;
 using ZeroTier.Utils;
 using ZeroTier.DTO.NetworkDtos;
+using System.Collections.ObjectModel;
 
 namespace ZeroTier.Services
 {
     public static class NetworkService
     {
-        public static async Task<List<NetworkViewModel>?> GetNetworks(APIClient apiClient)
+        public static async Task<ObservableCollection<NetworkViewModel>?> GetNetworks(APIClient apiClient)
         {
             HttpResponseMessage response = await apiClient.GetAsync("network");
 
@@ -25,7 +26,7 @@ namespace ZeroTier.Services
                     return null;
                 }
                 
-                return NetworkMapper.NetworksToViewModels(dtos);
+                return new ObservableCollection<NetworkViewModel>(NetworkMapper.NetworksToViewModels(dtos));
             }
             else if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
             {

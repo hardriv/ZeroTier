@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using ZeroTier.ViewModels.MemberModels;
 using ZeroTier.Services;
 using ZeroTier.Utils;
+using System.Collections.ObjectModel;
 
 namespace ZeroTier.Views
 {
@@ -19,9 +20,9 @@ namespace ZeroTier.Views
         private readonly TextBlock pageInfoTextBlock;
         private readonly Button previousPageButton;
         private readonly Button nextPageButton;
-        private List<MemberViewModel> allMembers = []; // Liste complète des membres
+        private ObservableCollection<MemberViewModel> allMembers = [];
         private int currentPage = 1;
-        private readonly int pageSize = 22;
+        private readonly int pageSize = 21;
 
         public MembersListControl()
         {
@@ -44,16 +45,16 @@ namespace ZeroTier.Views
 
         public async Task LoadMembers(string networkId)
         {
-            allMembers = await MemberService.GetMembers(apiClient, networkId); // TODO corriger le warning null
+            allMembers = await MemberService.GetMembers(apiClient, networkId) ?? [];
 
-            if (allMembers != null)
+            if (allMembers.Count > 0)
             {
                 UpdatePage(1);
                 UpdatePaginationControls();
             }
             else
             {
-                MessageBox.Show("Erreur lors du chargement des membres");
+                MessageBox.Show("Aucun membre trouvé ou erreur lors du chargement des membres");
             }
         }
 
@@ -61,7 +62,12 @@ namespace ZeroTier.Views
         {
             // Pagination : Obtenir les membres de la page actuelle
             currentPage = pageNumber;
-            var membersToDisplay = allMembers.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            ObservableCollection<MemberViewModel> membersToDisplay = new(allMembers
+                .Where(member => member != null) // Filtrer les membres non nuls
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToList());
+
             membersDataGrid.ItemsSource = membersToDisplay;
 
             // Mettre à jour le texte de la page

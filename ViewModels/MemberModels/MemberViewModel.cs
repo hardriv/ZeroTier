@@ -44,7 +44,7 @@ namespace ZeroTier.ViewModels.MemberModels
             }
         }
 
-        private MemberConfigViewModel _config;
+        private MemberConfigViewModel _config; // TODO corriger le warning null
         public required MemberConfigViewModel Config
         {
             get => _config;
@@ -61,7 +61,6 @@ namespace ZeroTier.ViewModels.MemberModels
         public DateTime LastOnline { get; set; }
         public DateTime LastSeen { get; set; }
         public string? PhysicalAddress { get; set; }
-        public object? PhysicalLocation { get; set; }
         public string? ClientVersion { get; set; }
         public int ProtocolVersion { get; set; }
         public bool SupportsRulesEngine { get; set; }

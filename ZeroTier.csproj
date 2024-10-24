@@ -12,5 +12,6 @@
     <Resource Include="Resources\authorize-20.png" />
     <Resource Include="Resources\deny-20.png" />
     <Resource Include="Resources\delete-20.png" />
+    <Resource Include="Resources\edit-20.png" />
   </ItemGroup>
 </Project>

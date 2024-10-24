@@ -44,7 +44,7 @@ namespace ZeroTier.ViewModels.MemberModels
         public required string Id { get; set; }
         public required string Identity { get; set; }
 
-        private string _ipAssignment;
+        private string _ipAssignment = string.Empty; // TODO corriger le warning null
         public required string IpAssignment
         {
             get => _ipAssignment;

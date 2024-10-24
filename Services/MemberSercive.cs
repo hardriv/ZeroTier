@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace ZeroTier.Services
 {
     public static class MemberService
     {
-        public static async Task<List<MemberViewModel>?> GetMembers(APIClient apiClient, string networkId)
+        public static async Task<ObservableCollection<MemberViewModel>?> GetMembers(APIClient apiClient, string networkId)
         {
             HttpResponseMessage response = await apiClient.GetAsync($"network/{networkId}/member");
 
@@ -25,7 +26,7 @@ namespace ZeroTier.Services
                     return null;
                 }
                 List<MemberViewModel> viewModel = MemberMapper.MembersToModels(dtos);
-                return viewModel;
+                return new ObservableCollection<MemberViewModel>(viewModel);
             }
             else if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
             {

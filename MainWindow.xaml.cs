@@ -8,6 +8,7 @@ using ZeroTier.ViewModels.NetworkModels;
 using ZeroTier.Services;
 using ZeroTier.Utils;
 using ZeroTier.Views;
+using System.Collections.ObjectModel;
 
 namespace ZeroTier
 {
@@ -78,7 +79,7 @@ namespace ZeroTier
             
             try
             {
-                var networks = await NetworkService.GetNetworks(apiClient);
+                ObservableCollection<NetworkViewModel> networks = new(await NetworkService.GetNetworks(apiClient) ?? []);
                 if (networks == null || networks.Count == 0)
                 {
                     MessageBox.Show("No networks found or networks list is null.");
