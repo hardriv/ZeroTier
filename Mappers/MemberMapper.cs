@@ -26,7 +26,8 @@ namespace ZeroTier.Mappers
                 ClientVersion = dto.ClientVersion,
                 ProtocolVersion = dto.ProtocolVersion,
                 SupportsRulesEngine = dto.SupportsRulesEngine,
-                IsSelected = false // Par défaut, non sélectionné
+                // Par défaut, non sélectionné
+                IsSelected = false
             };
         }
 

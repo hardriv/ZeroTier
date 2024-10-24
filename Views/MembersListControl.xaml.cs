@@ -183,11 +183,11 @@ namespace ZeroTier.Views
             MemberViewModel updatedMember;
             if (Authorized)
             {
-                updatedMember = await MemberService.AuthorizeMember(apiClient, memberToUpdate);
+                updatedMember = await MemberService.AuthorizeMember(apiClient, memberToUpdate) ?? memberToUpdate;
             }
             else
             {
-                updatedMember = await MemberService.DenyMember(apiClient, memberToUpdate);
+                updatedMember = await MemberService.DenyMember(apiClient, memberToUpdate) ?? memberToUpdate;
             }
 
             if (updatedMember != null)

@@ -9,6 +9,7 @@ using System.Windows;
 using ZeroTier.Utils;
 using ZeroTier.DTO.NetworkDtos;
 using System.Collections.ObjectModel;
+using ZeroTier.Mappers;
 
 namespace ZeroTier.Services
 {
@@ -21,7 +22,7 @@ namespace ZeroTier.Services
             List<NetworkDto>? dtos = await response.Content.ReadFromJsonAsync<List<NetworkDto>>();
             if (dtos == null || dtos.Count == 0)
             {
-                return null;
+                return [];
             }
             
             return new ObservableCollection<NetworkViewModel>(NetworkMapper.NetworksToViewModels(dtos));
