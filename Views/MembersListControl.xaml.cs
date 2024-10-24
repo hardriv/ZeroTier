@@ -209,9 +209,9 @@ namespace ZeroTier.Views
                         allMembers.Remove(memberToDelete);
                     }
                 }
-            }
             
-            RefreshMembersAfterDelete(success);
+                RefreshMembersAfterDelete(success);
+            }
         }
 
         private async void DeleteMember_Click(object sender, RoutedEventArgs e)
@@ -222,16 +222,28 @@ namespace ZeroTier.Views
                 if (MessageBox.Show("Êtes-vous sûr de vouloir supprimer ce membre ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     success = await MemberService.DeleteMember(apiClient, memberToDelete.NetworkId, memberToDelete.NodeId);
-                }
-            }            
+                    if (success)
+                    {
+                        // Retirer le membre de la liste locale
+                        allMembers.Remove(memberToDelete);
+                    }          
             
-            RefreshMembersAfterDelete(success);
+                    RefreshMembersAfterDelete(success);
+                }
+            }
         }
 
         private void RefreshMembersAfterDelete(bool success)
         {
             if (success)
             {
+                // Mettre à jour la pagination si le nombre de membres a changé
+                if (currentPage > Math.Ceiling((double)allMembers.Count / pageSize))
+                {
+                    // Revenir à la page précédente si la dernière est vide
+                    currentPage = Math.Max(1, currentPage - 1);
+                }
+
                 // Mettre à jour la page pour refléter les changements
                 UpdatePage(currentPage);
                 UpdatePaginationControls();
