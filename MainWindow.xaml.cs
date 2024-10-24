@@ -77,31 +77,15 @@ namespace ZeroTier
 
             apiClient.SetApiToken(apiToken);
             
-            try
+            ObservableCollection<NetworkViewModel> networks = new(await NetworkService.GetNetworks(apiClient) ?? []);
+            if (networks == null || networks.Count == 0)
             {
-                ObservableCollection<NetworkViewModel> networks = new(await NetworkService.GetNetworks(apiClient) ?? []);
-                if (networks == null || networks.Count == 0)
-                {
-                    MessageBox.Show("No networks found or networks list is null.");
-                }
-
-                if (networks != null)
-                {
-                    networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");                    
-                    networkSectionControl.networkListControl.networksGrid.ItemsSource = networks;
-                }
-                else
-                {
-                    MessageBox.Show("Erreur de connexion à l'API");
-                }
+                MessageBox.Show("No networks found or networks list is null.");
             }
-            catch (ApiException apiEx)
+            else
             {
-                MessageBox.Show(apiEx.Message);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur: {ex.Message}");
+                networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");                    
+                networkSectionControl.networkListControl.networksGrid.ItemsSource = networks;
             }
         }
 

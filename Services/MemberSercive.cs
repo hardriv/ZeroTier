@@ -33,14 +33,7 @@ namespace ZeroTier.Services
 
                 return new ObservableCollection<MemberViewModel>(sortedViewModel);
             }
-            else if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
-            {
-                MessageBox.Show($"Erreur client : {(int)response.StatusCode} - {response.ReasonPhrase}");
-            }
-            else if ((int)response.StatusCode >= 500)
-            {
-                MessageBox.Show($"Erreur serveur : {(int)response.StatusCode} - {response.ReasonPhrase}");
-            }
+            
             return null;
         }
 

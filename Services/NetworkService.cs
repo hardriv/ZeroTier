@@ -18,25 +18,13 @@ namespace ZeroTier.Services
         {
             HttpResponseMessage response = await apiClient.GetAsync("network");
 
-            if (response.IsSuccessStatusCode)
+            List<NetworkDto>? dtos = await response.Content.ReadFromJsonAsync<List<NetworkDto>>();
+            if (dtos == null || dtos.Count == 0)
             {
-                List<NetworkDto>? dtos = await response.Content.ReadFromJsonAsync<List<NetworkDto>>();
-                if (dtos == null || dtos.Count == 0)
-                {
-                    return null;
-                }
-                
-                return new ObservableCollection<NetworkViewModel>(NetworkMapper.NetworksToViewModels(dtos));
+                return null;
             }
-            else if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
-            {
-                MessageBox.Show($"Erreur client : {(int)response.StatusCode} - {response.ReasonPhrase}");
-            }
-            else if ((int)response.StatusCode >= 500)
-            {
-                MessageBox.Show($"Erreur serveur : {(int)response.StatusCode} - {response.ReasonPhrase}");
-            }
-            return null;
+            
+            return new ObservableCollection<NetworkViewModel>(NetworkMapper.NetworksToViewModels(dtos));
         }
 
         public static async Task<bool> DeleteNetwork(APIClient apiClient, string networkId)

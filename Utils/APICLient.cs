@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Windows;
 
 namespace ZeroTier.Utils
 {
@@ -11,19 +12,19 @@ namespace ZeroTier.Utils
     {
         private static readonly string BASE_URL = "https://api.zerotier.com/api/v1/";
         private string ApiToken = string.Empty;
-
-        private HttpClient client;
-
-        // Options JSON avec la stratégie camelCase
-        private readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,  // Applique camelCase
-            WriteIndented = false  // Pour une sortie compacte
-        };
+        private readonly HttpClient client;
+        private readonly JsonSerializerOptions jsonOptions;
 
         public APIClient()
         {
             client = new HttpClient { BaseAddress = new Uri(BASE_URL) };
+            jsonOptions = new()
+            {
+                // Applique camelCase
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                // Pour une sortie compacte
+                WriteIndented = false
+            };
         }
 
         // Méthode pour setter l'API token
@@ -36,37 +37,75 @@ namespace ZeroTier.Utils
         // Méthode GET
         public async Task<HttpResponseMessage> GetAsync(string endpoint)
         {
-            var response = await client.GetAsync(endpoint);
-            HandleErrors(response);
+            HttpResponseMessage response = new();
+            try
+            {
+                response = await client.GetAsync(endpoint);
+            }
+            catch (HttpRequestException e)
+            {
+                HandleExceptions(null, e);
+            }
+            catch (Exception e)
+            {
+                HandleExceptions(e, null);
+            }
+            
             return response;
         }
 
         // Méthode POST
         public async Task<HttpResponseMessage> PostAsync(string endpoint, HttpContent content)
         {
-            HttpContent jsonContent = JsonContent.Create(content, null, jsonOptions);
-            var response = await client.PostAsync(endpoint, jsonContent);
-            // Gestion des erreurs
-            HandleErrors(response);
+            HttpResponseMessage response = new();
+            try
+            {
+                HttpContent jsonContent = JsonContent.Create(content, null, jsonOptions);
+                response = await client.PostAsync(endpoint, jsonContent);
+            }
+            catch (HttpRequestException e)
+            {
+                HandleExceptions(null, e);
+            }
+            catch (Exception e)
+            {
+                HandleExceptions(e, null);
+            }
+            
             return response;
         }
 
         // Méthode DELETE
         public async Task<HttpResponseMessage> DeleteAsync(string endpoint)
         {
-            var response = await client.DeleteAsync(endpoint);
-            // Gestion des erreurs
-            HandleErrors(response);
+            HttpResponseMessage response = new(System.Net.HttpStatusCode.NotAcceptable);
+            try
+            {
+                response = await client.DeleteAsync(endpoint);
+            }
+            catch (HttpRequestException e)
+            {
+                HandleExceptions(null, e);
+            }
+            catch (Exception e)
+            {
+                HandleExceptions(e, null);
+            }
+            
             return response;
         }
 
-        // Méthode pour gérer les erreurs HTTP
-        private static void HandleErrors(HttpResponseMessage response)
+        private static void HandleExceptions(Exception? e, HttpRequestException? httpRequestException)  
         {
-            if (!response.IsSuccessStatusCode)
+            if (httpRequestException != null)
             {
-                // Jeter une ApiException avec le code de statut
-                throw new ApiException((int)response.StatusCode);
+                int statusCode = httpRequestException.StatusCode.HasValue ? (int)httpRequestException.StatusCode : 0;
+                ApiException apiException = new(statusCode, httpRequestException.Message);
+                MessageBox.Show($"Erreur : {apiException.StatusCode} - {apiException.Message}");
+            }
+            else if (e != null)
+            {
+                MessageBox.Show($"Erreur inattendue : {e.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

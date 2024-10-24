@@ -38,10 +38,9 @@ namespace ZeroTier.Views
 
         private async void DeleteNetwork_Click(object sender, RoutedEventArgs e)
         {
-            var network = ((Button)sender).DataContext as NetworkViewModel;
-            if (network != null)
+            if (((Button)sender).DataContext is NetworkViewModel network)
             {
-                var result = MessageBox.Show($"Êtes-vous sûr de vouloir supprimer le réseau {network.Config.Name} ?", 
+                var result = MessageBox.Show($"Êtes-vous sûr de vouloir supprimer le réseau {network.Config.Name} ?",
                                               "Confirmation de suppression", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
