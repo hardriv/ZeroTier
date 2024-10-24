@@ -7,6 +7,7 @@ using ZeroTier.ViewModels.MemberModels;
 using ZeroTier.Services;
 using ZeroTier.Utils;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ZeroTier.Views
 {
@@ -20,7 +21,9 @@ namespace ZeroTier.Views
         private readonly TextBlock pageInfoTextBlock;
         private readonly Button previousPageButton;
         private readonly Button nextPageButton;
+        private readonly CheckBox selectAllCheckBox;
         private ObservableCollection<MemberViewModel> allMembers = [];
+        private ObservableCollection<MemberViewModel> selectedMembers = [];
         private int currentPage = 1;
         private readonly int pageSize = 21;
 
@@ -29,13 +32,13 @@ namespace ZeroTier.Views
             InitializeComponent();
 
             membersDataGrid = (DataGrid)FindName("MembersDataGrid");
-            membersDataGrid.SelectionChanged += MembersDataGrid_SelectionChanged;
             authorizeSelection = (Button)FindName("AuthorizeSelection");
             denySelection = (Button)FindName("DenySelection");
             deleteSelection = (Button)FindName("DeleteSelection");
             pageInfoTextBlock = (TextBlock)FindName("PageInfo");
             previousPageButton = (Button)FindName("PreviousPage");
             nextPageButton = (Button)FindName("NextPage");
+            selectAllCheckBox = (CheckBox)FindName("SelectAllCheckBox");
         }
         
         public void Initialize(APIClient apiClient)
@@ -51,6 +54,15 @@ namespace ZeroTier.Views
             {
                 UpdatePage(1);
                 UpdatePaginationControls();
+                // On réinitialise la liste des membres sélectionnés
+                selectedMembers.Clear();
+
+                foreach (var member in allMembers)
+                {
+                    // Abonnement à l'événement PropertyChanged
+                    member.PropertyChanged += MemberSelectionChanged; //TODO corriger le warning null
+                }
+            
             }
             else
             {
@@ -107,29 +119,80 @@ namespace ZeroTier.Views
         {
             bool isChecked = (sender as CheckBox)?.IsChecked ?? false;
 
-            if (membersDataGrid.ItemsSource is List<MemberViewModel> members)
+            // Cast ItemsSource to ObservableCollection
+            if (membersDataGrid.ItemsSource is ObservableCollection<MemberViewModel> members)
             {
-                foreach (var memberToDelete in members)
+                foreach (var member in members)
                 {
-                    memberToDelete.IsSelected = isChecked;
+                    // Mettre à jour la propriété IsSelected de chaque membre
+                    member.IsSelected = isChecked;
                 }
-                // Met à jour l'affichage pour refléter les changements
-                membersDataGrid.Items.Refresh();
+            }
+
+            // Mettre à jour les boutons en fonction de la sélection
+            UpdateActionButtonsState();
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.DataContext is MemberViewModel member)
+            {
+                // Met à jour la sélection
+                member.IsSelected = checkBox.IsChecked ?? false;
+
+                // Mise à jour des boutons d'action et de la case SelectAllCheckBox
+                UpdateActionButtonsState();
+                UpdateSelectAllCheckBoxState();
             }
         }
 
-        private void MembersDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MemberSelectionChanged(object sender, PropertyChangedEventArgs e)
         {
-            var hasSelection = membersDataGrid.SelectedItems.Count > 0;
+            if (e.PropertyName == nameof(MemberViewModel.IsSelected))
+            {
+                if (sender is MemberViewModel member)
+                {
+                    if (member.IsSelected && !selectedMembers.Contains(member))
+                    {
+                        selectedMembers.Add(member);
+                    }
+                    else if (!member.IsSelected && selectedMembers.Contains(member))
+                    {
+                        selectedMembers.Remove(member);
+                    }
+
+                    // Mise à jour des boutons d'action en fonction de la sélection
+                    UpdateActionButtonsState();
+
+                    // Mettre à jour l'état de la case SelectAllCheckBox
+                    UpdateSelectAllCheckBoxState();
+                }
+            }
+        }
+        
+        private void UpdateActionButtonsState()
+        {
+            // Activer/désactiver les boutons en fonction du nombre de membres sélectionnés
+            bool hasSelection = selectedMembers.Count > 0;
             authorizeSelection.IsEnabled = hasSelection;
             denySelection.IsEnabled = hasSelection;
             deleteSelection.IsEnabled = hasSelection;
         }
 
+        private void UpdateSelectAllCheckBoxState()
+        {
+            if (membersDataGrid.ItemsSource is IEnumerable<MemberViewModel> members)
+            {
+                // Si tous les membres sont sélectionnés
+                selectAllCheckBox.IsChecked = members.All(m => m.IsSelected);
+                // Désactiver la case si aucun membre n'est présent
+                selectAllCheckBox.IsEnabled = members.Any();
+            }
+        }
+
         private void AuthorizeMembers_Click(object sender, RoutedEventArgs e)
         {
-            var selectedMembers = membersDataGrid.SelectedItems.Cast<MemberViewModel>().ToList();
-            if (MessageBox.Show("Êtes-vous sûr de vouloir autoriser les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (selectedMembers.Count > 0 && MessageBox.Show("Êtes-vous sûr de vouloir autoriser les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 foreach (var memberToUpdate in selectedMembers)
                 {
@@ -154,8 +217,7 @@ namespace ZeroTier.Views
 
         private void DenyMembers_Click(object sender, RoutedEventArgs e)
         {
-            var selectedMembers = membersDataGrid.SelectedItems.Cast<MemberViewModel>().ToList();
-            if (MessageBox.Show("Êtes-vous sûr de vouloir refuser les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (selectedMembers.Count > 0 && MessageBox.Show("Êtes-vous sûr de vouloir refuser les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 foreach (var memberToUpdate in selectedMembers)
                 {
@@ -203,8 +265,7 @@ namespace ZeroTier.Views
         private async void DeleteMembers_Click(object sender, RoutedEventArgs e)
         {
             var success = false;
-            var selectedMembers = membersDataGrid.SelectedItems.Cast<MemberViewModel>().ToList();
-            if (MessageBox.Show("Êtes-vous sûr de vouloir supprimer les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (selectedMembers.Count > 0 && MessageBox.Show("Êtes-vous sûr de vouloir supprimer les membres sélectionnés ?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 foreach (var memberToDelete in selectedMembers)
                 {

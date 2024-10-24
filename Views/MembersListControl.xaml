@@ -46,9 +46,21 @@
         </StackPanel>
         
         <!-- DataGrid pour la liste des membres -->
-        <DataGrid x:Name="MembersDataGrid" AutoGenerateColumns="False" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="0,10,0,0">
+        <DataGrid x:Name="MembersDataGrid" 
+            AutoGenerateColumns="False" 
+            Grid.Column="0" Grid.Row="3" 
+            Grid.ColumnSpan="2" Margin="0,10,0,0"
+            IsReadOnly="True"
+            SelectionMode="Extended"
+            SelectionUnit="FullRow">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Header="Select" Binding="{Binding IsSelected, Mode=TwoWay}"/>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Click="CheckBox_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Node Id" Binding="{Binding NodeId}"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="IP Assignment" Binding="{Binding Config.IpAssignment}"/>

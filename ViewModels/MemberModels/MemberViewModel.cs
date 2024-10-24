@@ -74,7 +74,7 @@ namespace ZeroTier.ViewModels.MemberModels
                 if (_isSelected != value)
                 {
                     _isSelected = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(IsSelected));
                 }
             }
         }
