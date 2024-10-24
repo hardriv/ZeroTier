@@ -25,8 +25,13 @@ namespace ZeroTier.Services
                 {
                     return null;
                 }
-                List<MemberViewModel> viewModel = MemberMapper.MembersToModels(dtos);
-                return new ObservableCollection<MemberViewModel>(viewModel);
+
+                // Trier pour avoir les membres autorisés en premier
+                var sortedViewModel = MemberMapper.MembersToModels(dtos)
+                    .OrderByDescending(member => member.Config.Authorized)
+                    .ToList();
+
+                return new ObservableCollection<MemberViewModel>(sortedViewModel);
             }
             else if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
             {
