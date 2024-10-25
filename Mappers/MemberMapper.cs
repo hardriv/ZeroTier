@@ -54,6 +54,17 @@ namespace ZeroTier.Mappers
             };
         }
 
+        public static MemberUpdateDto MemberUpdateToDto(MemberViewModel viewModel)
+        {
+            return new MemberUpdateDto
+            {
+                Hidden = viewModel.Hidden,
+                Name = viewModel.Name,
+                Description = viewModel.Description,
+                Config = MemberConfigUpdateToDto(viewModel.Config),
+            };
+        }
+
         public static MemberConfigViewModel MemberConfigToViewModel(MemberConfigDto dto)
         {
             return new MemberConfigViewModel
@@ -112,7 +123,21 @@ namespace ZeroTier.Mappers
             };
         }
 
-        public static List<MemberViewModel> MembersToModels(List<MemberDto> dtos)
+        public static MemberConfigUpdateDto MemberConfigUpdateToDto(MemberConfigViewModel viewModel)
+        {
+            return new MemberConfigUpdateDto
+            {
+                ActiveBridge = viewModel.ActiveBridge,
+                Authorized = viewModel.Authorized,
+                Capabilities = viewModel.Capabilities,
+                IpAssignments = [viewModel.IpAssignment],
+                NoAutoAssignIps = viewModel.NoAutoAssignIps,
+                Tags = viewModel.Tags,
+                SsoExempt = viewModel.SsoExempt
+            };
+        }
+
+        public static List<MemberViewModel> MembersToViewModels(List<MemberDto> dtos)
         {
             List<MemberViewModel> viewModels = [];
             foreach (MemberDto dto in dtos)
@@ -151,6 +176,28 @@ namespace ZeroTier.Mappers
             foreach (MemberConfigViewModel viewModel in viewModels)
             {
                 MemberConfigDto dto = MemberConfigToDto(viewModel);
+                dtos.Add(dto);
+            }
+            return dtos;
+        }
+
+        public static List<MemberUpdateDto> MemberUpdatesToDtos(List<MemberViewModel> viewModels)
+        {
+            List<MemberUpdateDto> dtos = [];
+            foreach (MemberViewModel viewModel in viewModels)
+            {
+                MemberUpdateDto dto = MemberUpdateToDto(viewModel);
+                dtos.Add(dto);
+            }
+            return dtos;
+        }
+
+        public static List<MemberConfigUpdateDto> MemberConfigUpdatesToDtos(List<MemberConfigViewModel> viewModels)
+        {
+            List<MemberConfigUpdateDto> dtos = [];
+            foreach (MemberConfigViewModel viewModel in viewModels)
+            {
+                MemberConfigUpdateDto dto = MemberConfigUpdateToDto(viewModel);
                 dtos.Add(dto);
             }
             return dtos;

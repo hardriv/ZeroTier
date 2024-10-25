@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Windows;
+using ZeroTier.DTO.MemberDtos;
 
 namespace ZeroTier.Utils
 {
@@ -55,12 +56,12 @@ namespace ZeroTier.Utils
         }
 
         // Méthode POST
-        public async Task<HttpResponseMessage> PostAsync(string endpoint, HttpContent content)
+        public async Task<HttpResponseMessage> PostAsync(string endpoint, MemberUpdateDto memberDto)
         {
             HttpResponseMessage response = new();
             try
             {
-                HttpContent jsonContent = JsonContent.Create(content, null, jsonOptions);
+                HttpContent jsonContent = JsonContent.Create(memberDto, null, jsonOptions);
                 response = await client.PostAsync(endpoint, jsonContent);
             }
             catch (HttpRequestException e)

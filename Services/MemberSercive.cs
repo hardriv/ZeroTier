@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using ZeroTier.DTO.MemberDtos;
@@ -27,7 +28,7 @@ namespace ZeroTier.Services
                 }
 
                 // Trier pour avoir les membres autorisés en premier
-                var sortedViewModel = MemberMapper.MembersToModels(dtos)
+                var sortedViewModel = MemberMapper.MembersToViewModels(dtos)
                     .OrderByDescending(member => member.Config.Authorized)
                     .ToList();
 
@@ -50,58 +51,21 @@ namespace ZeroTier.Services
             return MemberMapper.MemberToViewModel(dto);
         }
 
-        public static async Task<MemberViewModel?> AuthorizeMember(APIClient apiClient, MemberViewModel memberViewModel)
+        public static async Task<MemberViewModel?> UpdateMember(APIClient apiClient, MemberViewModel memberViewModel, bool authorized)
         {
-            memberViewModel.Config.Authorized = true;
+            memberViewModel.Config.Authorized = authorized;
 
-            MemberDto memberDto = MemberMapper.MemberToDto(memberViewModel);
-            HttpContent memberJson = JsonContent.Create(memberDto);
-            HttpResponseMessage response = await apiClient.PostAsync($"network/{memberDto.NetworkId}/member/{memberDto.NodeId}", memberJson);
+            MemberUpdateDto memberDto = MemberMapper.MemberUpdateToDto(memberViewModel);
+            HttpResponseMessage response = await apiClient.PostAsync($"network/{memberViewModel.NetworkId}/member/{memberViewModel.NodeId}", memberDto);
 
             if (response.IsSuccessStatusCode)
             {
-                return await GetMemberById(apiClient, memberDto.NetworkId, memberDto.NodeId);
+                return await GetMemberById(apiClient, memberViewModel.NetworkId, memberViewModel.NodeId);
             }
             else
             {
                 MessageBox.Show($"Erreur : {(int)response.StatusCode} - {response.ReasonPhrase}");
                 return null;
-            }
-        }
-
-        public static async Task<MemberViewModel?> DenyMember(APIClient apiClient, MemberViewModel memberViewModel)
-        {
-            memberViewModel.Config.Authorized = false;
-            
-            MemberDto memberDto = MemberMapper.MemberToDto(memberViewModel);
-            HttpContent memberJson = JsonContent.Create(memberDto);
-            HttpResponseMessage response = await apiClient.PostAsync($"network/{memberDto.NetworkId}/member/{memberDto.NodeId}", memberJson);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return await GetMemberById(apiClient, memberDto.NetworkId, memberDto.NodeId);
-            }
-            else
-            {
-                MessageBox.Show($"Erreur : {(int)response.StatusCode} - {response.ReasonPhrase}");
-                return null;
-            }
-        }
-
-        public static async Task<bool> UpdateMember(APIClient apiClient, MemberViewModel memberViewModel)
-        {
-            MemberDto memberDto = MemberMapper.MemberToDto(memberViewModel);
-            HttpContent memberJson = JsonContent.Create(memberDto);
-            HttpResponseMessage response = await apiClient.PostAsync($"network/{memberViewModel.NetworkId}/member/{memberViewModel.NodeId}", memberJson);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            else
-            {
-                MessageBox.Show($"Erreur : {(int)response.StatusCode} - {response.ReasonPhrase}");
-                return false;
             }
         }
 

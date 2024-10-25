@@ -240,18 +240,10 @@ namespace ZeroTier.Views
             }
         }
 
-        private async void UpdateAuthorizedOrDeniedMember(bool Authorized, MemberViewModel memberToUpdate)
+        private async void UpdateAuthorizedOrDeniedMember(bool authorized, MemberViewModel memberToUpdate)
         {
-            MemberViewModel updatedMember;
-            if (Authorized)
-            {
-                updatedMember = await MemberService.AuthorizeMember(apiClient, memberToUpdate) ?? memberToUpdate;
-            }
-            else
-            {
-                updatedMember = await MemberService.DenyMember(apiClient, memberToUpdate) ?? memberToUpdate;
-            }
-
+            MemberViewModel updatedMember = await MemberService.UpdateMember(apiClient, memberToUpdate, authorized) ?? memberToUpdate;
+            // TODO ajouter l'assignation de l'adresse IP
             if (updatedMember != null)
             {
                 memberToUpdate.Config.Authorized = updatedMember.Config.Authorized;
