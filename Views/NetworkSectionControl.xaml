@@ -1,48 +1,253 @@
-<UserControl x:Class="ZeroTier.Views.NetworkSectionControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ZeroTier.Views">
-    <Grid>
-        <!-- Définir les lignes et colonnes -->
+             xmlns:local="clr-namespace:ZeroTier.Views" xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:NetworkModels="clr-namespace:ZeroTier.ViewModels.NetworkModels" 
+             mc:Ignorable="av" 
+             x:Class="ZeroTier.Views.NetworkSectionControl">
+
+    <Grid Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Section pour les titres -->
-            <RowDefinition Height="*"/> <!-- Section pour les informations -->
+            <RowDefinition Height="220"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500"/> <!-- Section pour la liste des réseaux -->
-            <ColumnDefinition Width="1*"/> <!-- Section pour les détails du réseau Part 1 -->
-            <ColumnDefinition Width="1*"/> <!-- Section pour les détails du réseau Part 2 -->
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Titre pour la liste des réseaux -->
-        <TextBlock Text="Networks owned" 
-            FontWeight="Bold" 
-            FontSize="16" 
-            Margin="10" 
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center" 
-            Grid.Row="0" 
-            Grid.Column="0" />
+        <Grid Grid.Row="0" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <!-- Section 2.1 : Liste des réseaux -->
-        <local:NetworkListControl x:Name="NetworkListControl" Grid.Row="1" Grid.Column="0" />
+            <TextBlock Text="Networks owned" Grid.Row="0"
+                       HorizontalAlignment="Left" VerticalAlignment="Top"
+                       FontWeight="Bold" FontSize="20" Margin="10,0,0,0" />
 
-        <!-- Titre pour les détails du réseau -->
-        <TextBlock Text="Network information" 
-            FontWeight="Bold" 
-            FontSize="16" 
-            Margin="10" 
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center" 
-            Grid.ColumnSpan="2" 
-            Grid.Row="0" 
-            Grid.Column="1" />
+            <local:NetworkListControl x:Name="NetworkListControl" Grid.Row="1" />
+        </Grid>
 
-        <!-- Section 2.2 : Détails du réseau Part 1 -->
-        <local:NetworkDetailsControl x:Name="NetworkDetailsControl" Grid.Row="1" Grid.Column="1" />
+        <!--<Grid Grid.Row="1" VerticalAlignment="Stretch" Margin="0,20,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- Section 2.3 : Détails du réseau Part 2 -->
-        <local:NetworkAdditionalDetailsControl x:Name="NetworkAdditionalDetailsControl" Grid.Row="1" Grid.Column="2" />
+            <TextBlock Text="Network information"
+                       Grid.Row="0" Grid.Column="0"
+                       HorizontalAlignment="Left" VerticalAlignment="Top"
+                       FontWeight="Bold" FontSize="20" Margin="10,0,0,0" />
 
+            <local:NetworkDetailsControl x:Name="NetworkDetailsControl" Grid.Row="1" Grid.Column="0" Margin="0" />
+            <local:NetworkAdditionalDetailsControl x:Name="NetworkAdditionalDetailsControl" Grid.Row="1" Grid.Column="1" Margin="0" />
+        </Grid>-->
+
+        <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,20,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Network edition"
+                       Grid.Row="0" Grid.ColumnSpan="2"
+                       HorizontalAlignment="Left" VerticalAlignment="Top"
+                       FontWeight="Bold" FontSize="20" Margin="10,0,0,0" />
+
+            <Grid Grid.Row="1" Grid.Column="0" Margin="0,10,0,0">
+
+                <TextBlock Text="ID : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" TextWrapping="Wrap" FontWeight="Bold" />
+                <TextBlock x:Name="NetworkId" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,10,0,0" Width="120" Text="12ac4a1e71c49117" />
+
+                <TextBlock Text="Name :" HorizontalAlignment="Left" VerticalAlignment="Top" Height="22" Margin="10,40,0,0" TextWrapping="Wrap" FontWeight="Bold" />
+                <TextBox x:Name="NetworkName" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="22" Margin="100,40,0,0" TextWrapping="Wrap" BorderBrush="#FFA0A0A0" />
+
+                <TextBlock Text="Description :" HorizontalAlignment="Left" VerticalAlignment="Top" Height="22" Margin="10,80,0,0" TextWrapping="Wrap" FontWeight="Bold" />
+                <TextBox x:Name="DescriptionTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="120" Margin="100,80,0,0" TextWrapping="Wrap" BorderBrush="#FFA0A0A0" />
+
+                <Border BorderBrush="#FFD4D4D4" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="5,220,0,0" VerticalAlignment="Top" Width="395"/>
+                <TextBlock Text="Access Control :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,226,0,0" TextWrapping="Wrap" FontWeight="Bold" />
+                <RadioButton x:Name="AccessControlPrivate" Content="Private" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="140,228,0,0" />
+                <RadioButton x:Name="AccessControlPublic" Content="Public" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="260,228,0,0" />
+
+                <Border BorderBrush="#FFD4D4D4" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="5,280,0,0" VerticalAlignment="Top" Width="395"/>
+                <TextBlock Text="Multicast :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,284,0,0" TextWrapping="Wrap" FontWeight="Bold" />
+                <CheckBox x:Name="MulticastCheckBox" Content="Enable" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,286,0,0" />
+                <TextBlock Text="Recipient Limit :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,284,0,0" TextWrapping="Wrap" />
+                <TextBox x:Name="RecipientLimitTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                         Width="60" Height="22" Margin="320,284,0,0" TextWrapping="Wrap" 
+                         BorderBrush="#FFA0A0A0" IsEnabled="{Binding ElementName=MulticastCheckBox, Path=IsChecked}" />
+
+                <Border BorderBrush="#FFD4D4D4" BorderThickness="1" HorizontalAlignment="Left" Height="100" Margin="5,340,0,0" VerticalAlignment="Top" Width="395"/>
+                <TextBlock Text="DNS :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,344,0,0" TextWrapping="Wrap" FontWeight="Bold" />
+                <TextBlock Text="Requires ZeroTier version 1.6. See Settings Help." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,344,0,0" TextWrapping="Wrap" FontStyle="Italic" />
+                <TextBlock Text="Search domain" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,380,0,0" TextWrapping="Wrap" />
+                <TextBox x:Name="DnsDomainTextBox"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" Height="22" Margin="140,380,0,0" TextWrapping="Wrap" BorderBrush="#FFA0A0A0" />
+                <TextBlock Text="Server address" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,410,0,0" TextWrapping="Wrap" />
+                <TextBox x:Name="DnsServerTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" Height="22" Margin="140,410,0,0" TextWrapping="Wrap" BorderBrush="#FFA0A0A0" />
+
+                <Border BorderBrush="#FFD4D4D4" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="5,470,0,0" VerticalAlignment="Top" Width="395"/>
+                <TextBlock Text="Members" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,474,0,0" FontWeight="Bold" />
+                <TextBlock Text="Online :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,474,0,0" />
+                <TextBlock x:Name="NetworkOnlineMembers" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,474,0,0" Text="06"/>
+                <TextBlock Text="Authorized :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="200,474,0,0" />
+                <TextBlock x:Name="NetworkAuthorizedMembers" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="280,474,0,0" Text="08"/>
+                <TextBlock Text="Total :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="330,474,0,0" />
+                <TextBlock x:Name="NetworkTotalMembers" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="370,474,0,0" Text="10"/>
+
+
+                <TextBlock Text="Created :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,520,0,0" FontWeight="Bold" />
+                <TextBlock x:Name="NetworkCreatedTime" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="160,520,0,0" Text="2024-10-24 15h42:52.000"/>
+
+                <TextBlock Text="Modified :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,560,0,0" FontWeight="Bold" />
+                <TextBlock x:Name="NetworkModifiedTime" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="160,560,0,0" Text="2024-10-24 15h42:52.000"/>
+                <Button x:Name="SubmitEditedNetwork" Content="Submit" HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="22" Margin="0,600,0,0" />
+            </Grid>
+
+            <Border BorderBrush="#FFD4D4D4" BorderThickness="1" Grid.RowSpan="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0" Width="430" Height="686"/>
+            <Grid Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Stretch" Margin="0,20,12,0">
+
+                <TextBlock Text="Advanced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,-15,0,0" FontWeight="Bold" TextDecorations="Underline" />
+
+                <Border BorderBrush="#FFD4D4D4" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,10" Height="200" />
+                <TextBlock Text="Managed routes" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="14,12,0,0" FontWeight="Bold" />
+                <TextBlock Text="LAN :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,40,0,0" FontWeight="Bold" />
+                <ListBox x:Name="NetworkRoutes" HorizontalAlignment="Left" VerticalAlignment="Top" Width="320" Height="48" Margin="60,40,0,0">
+                    <NetworkModels:RouteViewModel/>
+                </ListBox>
+                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="390,40,0,0" BorderBrush="Snow">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Resources/delete-20.png"/>
+                    </Button.Background>
+                </Button>
+                <TextBlock Text="Add routes :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,100,0,0" FontWeight="Bold" />
+                <TextBlock Text="Destination :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,120,0,0" />
+                <TextBox x:Name="RouteDestination" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" Height="22" Margin="140,116,0,0" TextWrapping="Wrap" BorderBrush="#FFA0A0A0" />
+                <TextBlock Text="Via :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,150,0,0" />
+                <TextBox x:Name="RouteVia" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" Height="22" Margin="140,146,0,0" TextWrapping="Wrap" BorderBrush="#FFA0A0A0" />
+                <Button x:Name="AddRoute" Content="Submit" HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="22" Margin="0,180,0,0" />
+
+                <Border BorderBrush="#FFD4D4D4" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,220,10,0" Height="Auto">
+                    <StackPanel>
+                        <TextBlock Text="IPv4 auto assign" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" FontWeight="Bold" />
+                        <CheckBox x:Name="IPv4AutoAssign" Content="Auto-assign from range" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,5" 
+                                  Checked="IPv4AutoAssign_Checked" Unchecked="IPv4AutoAssign_Unchecked" />
+                        <Grid x:Name="IPv4AutoAssignGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsEnabled="False">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Text="IPv4 avaliable" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,2" FontWeight="Bold" />
+
+                            <!-- IP Addresses -->
+                            <TextBlock Text="10.147.17.*" Grid.Row="1" Grid.Column="0" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="10.147.18.*" Grid.Row="1" Grid.Column="1" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="10.147.19.*" Grid.Row="1" Grid.Column="2" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="10.147.20.*" Grid.Row="1" Grid.Column="3" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="10.144.*.*" Grid.Row="2" Grid.Column="0" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="10.241.*.*" Grid.Row="2" Grid.Column="1" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="10.242.*.*" Grid.Row="2" Grid.Column="2" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="10.243.*.*" Grid.Row="2" Grid.Column="3" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="10.244.*.*" Grid.Row="3" Grid.Column="0" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.22.*.*" Grid.Row="3" Grid.Column="1" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.23.*.*" Grid.Row="3" Grid.Column="2" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.24.*.*" Grid.Row="3" Grid.Column="3" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.25.*.*" Grid.Row="4" Grid.Column="0" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.26.*.*" Grid.Row="4" Grid.Column="1" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.27.*.*" Grid.Row="4" Grid.Column="2" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.28.*.*" Grid.Row="4" Grid.Column="3" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.29.*.*" Grid.Row="5" Grid.Column="0" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="172.30.*.*" Grid.Row="5" Grid.Column="1" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="192.168.191.*" Grid.Row="5" Grid.Column="2" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="192.168.192.*" Grid.Row="5" Grid.Column="3" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="192.168.193.*" Grid.Row="6" Grid.Column="0" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="192.168.194.*" Grid.Row="6" Grid.Column="1" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="192.168.195.*" Grid.Row="6" Grid.Column="2" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                            <TextBlock Text="192.168.196.*" Grid.Row="6" Grid.Column="3" Margin="2" 
+                                       Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                        </Grid>
+                        <Button x:Name="SubmitIPv4AutoAssign" Content="Submit"  Click="SubmitIPv4AutoAssign_Click"
+                                HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="22" Margin="5" />
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="#FFD4D4D4" BorderThickness="1" VerticalAlignment="Top" Margin="10,480,10,0" Height="180" />
+                <TextBlock Text="IPv6 auto assign" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="14,484,0,0" FontWeight="Bold" />
+                
+                <CheckBox x:Name="IPv6RFC4193CheckBox" Content="ZeroTier RFC4193 (/128 for each device)" 
+                          HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,510,0,0" />
+                <TextBlock x:Name="IPv6RFC4193" Text="fd12:ac4a:1e71:c491:1799:93__:____:____" 
+                           HorizontalAlignment="Left" VerticalAlignment="Top" 
+                           Width="270" Height="22" Margin="80,530,0,0" 
+                           Visibility="{Binding IsChecked, ElementName=IPv66PLANECheckBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                <CheckBox x:Name="IPv66PLANECheckBox" Content="ZeroTier 6PLANE (/80 routable for each device)" 
+                          HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,550,0,0" />
+                <TextBlock x:Name="IPv66PLANE" Text="fc63:68db:09__:____:____:0000:0000:0001" 
+                           HorizontalAlignment="Left" VerticalAlignment="Top" 
+                           Width="270" Height="22" Margin="80,570,0,0" 
+                           Visibility="{Binding IsChecked, ElementName=IPv66PLANECheckBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                
+                <!--<CheckBox x:Name="IPv6utoAssignCheckBox" Content="Auto-Assign from Range" 
+                          HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,550,0,0" />
+                <Grid x:Name="Ipv6AutoRangeGrid" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                      Width="350" Height="52" Margin="40,570,0,0" 
+                      Visibility="{Binding IsChecked, ElementName=IPv6utoAssignCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="Range start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,4,0,0" />
+                    <TextBox x:Name="IPv6RangeStart" HorizontalAlignment="Left" VerticalAlignment="Top" Width="270" Height="22" Margin="80,0,0,0" TextWrapping="Wrap" BorderBrush="#FFA0A0A0" />
+                    <TextBlock Text="Range end" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,34,0,0" />
+                    <TextBox x:Name="IPv6RangeEnd" HorizontalAlignment="Left" VerticalAlignment="Top" Width="270" Height="22" Margin="80,30,0,0" TextWrapping="Wrap" BorderBrush="#FFA0A0A0" />
+                </Grid>-->
+                
+                <Button x:Name="SubmitIPv6AutoAssign" Content="Submit" HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="22" Margin="0,630,0,0" />
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

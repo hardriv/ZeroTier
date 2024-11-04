@@ -8,22 +8,25 @@
         WindowStyle="SingleBorderWindow" 
         ResizeMode="CanResizeWithGrip" 
         WindowState="Maximized"
+        FontSize="14" Background="#FFF3F3F3"
         Title="MainWindow" Height="1000" Width="1900">
-    
+
     <Grid>
         <!-- Définir les lignes et colonnes -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Section pour le Token API -->
-            <RowDefinition Height="Auto"/> <!-- Section pour la liste des réseaux -->
-            <RowDefinition Height="*"/> <!-- Section pour la liste des membres -->
+            <!-- Section pour le Token API -->
+            <RowDefinition Height="70"/>
+            <!-- Section pour les informations -->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/> <!-- Pour toute la largeur -->
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Section 1 : Token API -->
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="10">
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="60,10,10,10">
             <StackPanel Orientation="Horizontal">
                 <Image Source="pack://application:,,,/Resources/ZeroTierIcon.png" Width="50" Height="50"/>
                 <TextBlock Text="API Token:" VerticalAlignment="Center" Margin="5"/>
@@ -55,9 +58,10 @@
         </StackPanel>
 
         <!-- Section 2 : Liste des réseaux -->
-        <local:NetworkSectionControl Grid.Row="1" x:Name="NetworkSectionControl" />
+        <local:NetworkSectionControl x:Name="NetworkSectionControl" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="60,10,5,10" />
 
         <!-- Section 3 : Liste des membres -->
-        <local:MembersListControl Grid.Row="2" x:Name="MembersListControl" />
+        <local:MembersListControl x:Name="MembersListControl" Grid.Row="1" Grid.Column="1" Margin="5,10,10,10" />
+    
     </Grid>
 </Window>

@@ -34,7 +34,7 @@ namespace ZeroTier
             membersListControl.Initialize(apiClient);
 
             // Abonnement à l'événement
-            networkSectionControl.NetworkSelected += OnNetworkSelected; // TODO corriger le warning null
+            networkSectionControl.NetworkSelectedEvent += OnNetworkSelected; // TODO corriger le warning null
 
             errorText = (TextBlock)FindName("ErrorText");
         }
