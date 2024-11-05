@@ -67,11 +67,10 @@ namespace ZeroTier.Views
                 if (Regex.IsMatch(storedIp, regex))
                 {
                     SelectTextBlock(textBlock);
-                    break; // Quitter la boucle après avoir trouvé une correspondance
+                    break;
                 }
             }
         }
-
 
         private void IPv4AutoAssign_Checked(object sender, RoutedEventArgs e)
         {
@@ -104,7 +103,7 @@ namespace ZeroTier.Views
             _selectedTextBlock = textBlock;
             _selectedTextBlock.Tag = "Selected";
         }
-
+        
         private void DeselectTextBlock()
         {
             // Retirer la sélection précédente si elle existe
@@ -114,6 +113,7 @@ namespace ZeroTier.Views
                 _selectedTextBlock = null;
             }
         }
+
         private void SubmitIPv4AutoAssign_Click(object sender, RoutedEventArgs e)
         {
             // Mettre à jour Network.Config.IpAssignmentPoolViewModel[0] avec le texte du TextBlock sélectionné
@@ -124,6 +124,22 @@ namespace ZeroTier.Views
             else
             {
                 MessageBox.Show("Veuillez sélectionner une adresse IP avant de soumettre.", "Aucune sélection", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+            if (checkBox.IsChecked == true)
+            {
+                // Vérifier si une autre checkbox est déjà sélectionnée
+                foreach (CheckBox cb in new[] { IPv6RFC4193CheckBox, IPv66PLANECheckBox, IPv6utoAssignCheckBox })
+                {
+                    if (cb.IsChecked == true && cb != checkBox)
+                    {
+                        cb.IsChecked = false;
+                    }
+                }
             }
         }
 
