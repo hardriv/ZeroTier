@@ -4,6 +4,16 @@
              xmlns:local="clr-namespace:ZeroTier.Utils"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <local:StatusConverter x:Key="StatusConverter"/>
+        <local:StatusConverter x:Key="StatusConverter"/>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <!-- Style for the selectable TextBlocks -->
+        <Style x:Key="SelectableTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="Tag" Value="Selected">
+                    <Setter Property="Background" Value="Gray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

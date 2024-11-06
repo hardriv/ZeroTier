@@ -2,11 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ZeroTier.Views">
-    <DataGrid x:Name="NetworksGrid" 
-        AutoGenerateColumns="False" 
-        Margin="10"
-        SelectionChanged="NetworksGrid_SelectionChanged"
-        CanUserAddRows="False">
+    <DataGrid x:Name="NetworksGrid" Margin="10" 
+              SelectionChanged="NetworksGrid_SelectionChanged"
+              CanUserAddRows="False" 
+              AutoGenerateColumns="False">
         <DataGrid.Columns>
             <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="110"/>
             <DataGridTextColumn Header="Name" Binding="{Binding Config.Name}" Width="180"/>

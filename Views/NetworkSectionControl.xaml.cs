@@ -5,46 +5,60 @@ using System.Windows;
 using System.Windows.Controls;
 using ZeroTier.ViewModels.NetworkModels;
 using ZeroTier.Utils;
+using System.Windows.Media.Animation;
+using System.Net;
+using System.Windows.Input;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace ZeroTier.Views
 {
     public partial class NetworkSectionControl : UserControl
     {
-        private APIClient apiClient = new();
-        public NetworkListControl networkListControl = new();
-        public NetworkDetailsControl networkDetailsControl = new();
-        public NetworkAdditionalDetailsControl networkAdditionalDetailsControl = new();
-        public event EventHandler<NetworkViewModel> NetworkSelected = delegate { };
+        private NetworkListControl _networkListControl = new();
+        private NetworkEditionControl _networkEditionControl = new();
+
+        public event EventHandler<NetworkViewModel> NetworkSelectedEvent = delegate { };
 
         public NetworkSectionControl()
         {
             InitializeComponent();
-            networkListControl = (NetworkListControl)FindName("NetworkListControl");
-            networkDetailsControl = (NetworkDetailsControl)FindName("NetworkDetailsControl");
-            networkAdditionalDetailsControl = (NetworkAdditionalDetailsControl)FindName("NetworkAdditionalDetailsControl");
-            
-            if (networkListControl == null)
+            InitializeControls();
+            InitializeEvents();
+        }
+
+        private void InitializeControls()
+        {
+            _networkListControl = (NetworkListControl)FindName("NetworkListControl")
+                ?? throw new NullReferenceException("NetworkListControl non trouvé");
+
+            _networkEditionControl = (NetworkEditionControl)FindName("NetworkEditionControl")
+                ?? throw new NullReferenceException("NetworkEditionControl non trouvé");
+        }
+
+        private void InitializeEvents()
+        {
+            if (_networkListControl != null)
             {
-                MessageBox.Show("NetworkListControl is not found!");
+                _networkListControl.NetworkSelected += OnNetworkSelected;
             }
-            else
+
+            if (_networkEditionControl != null)
             {
-                networkListControl.NetworkSelected += OnNetworkSelected; // TODO corriger le warning null
+                _networkEditionControl.NetworkSelectedEvent += OnNetworkSelected;
             }
         }
 
-        // Si tu as besoin de passer l'APIClient, fais-le par une méthode ou propriété
         public void Initialize(APIClient apiClient)
         {
-            this.apiClient = apiClient;
-            networkListControl.Initialize(apiClient);
+            _networkListControl?.Initialize(apiClient);
+            _networkEditionControl?.Initialize(apiClient);
         }
 
-        private void OnNetworkSelected(object sender, NetworkViewModel selectedNetwork)
+        public void OnNetworkSelected(object sender, NetworkViewModel selectedNetwork)
         {
-            NetworkSelected?.Invoke(this, selectedNetwork);
-            networkDetailsControl.DisplayNetworkDetails(selectedNetwork);
-            networkAdditionalDetailsControl.DisplayNetworkAdditionalDetails(selectedNetwork);
+            NetworkSelectedEvent?.Invoke(this, selectedNetwork);
         }
+
     }
 }

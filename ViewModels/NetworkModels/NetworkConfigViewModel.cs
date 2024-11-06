@@ -9,7 +9,7 @@ namespace ZeroTier.ViewModels.NetworkModels
         public List<object>? Capabilities { get; set; }
         public bool EnableBroadcast { get; set; }
         public required string Id { get; set; }
-        public List<IpAssignmentPoolViewModel> IpAssignmentPools { get; set; } = new List<IpAssignmentPoolViewModel>();
+        public List<IpAssignmentPoolViewModel> IpAssignmentPools { get; set; } = [];
         public DateTime LastModified { get; set; }
         public int Mtu { get; set; }
         public int MulticastLimit { get; set; }
@@ -17,8 +17,8 @@ namespace ZeroTier.ViewModels.NetworkModels
         public bool Private { get; set; }
         public int RemoteTraceLevel { get; set; }
         public string? RemoteTraceTarget { get; set; }
-        public List<RouteViewModel> Routes { get; set; } = new List<RouteViewModel>();
-        public List<RuleViewModel> Rules { get; set; } = new List<RuleViewModel>();
+        public List<RouteViewModel> Routes { get; set; } = [];
+        public List<RuleViewModel> Rules { get; set; } = [];
         public List<object>? Tags { get; set; } = new List<object>();
         public V4AssignModeViewModel V4AssignMode { get; set; } = new V4AssignModeViewModel();
         public V6AssignModeViewModel V6AssignMode { get; set; } = new V6AssignModeViewModel();
