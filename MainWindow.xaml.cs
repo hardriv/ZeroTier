@@ -15,28 +15,45 @@ namespace ZeroTier
     public partial class MainWindow : Window
     {
         private readonly APIClient apiClient = new();
-        public NetworkSectionControl networkSectionControl = new();
-        private readonly MembersListControl membersListControl = new();
-        private readonly TextBlock errorText;
-        public TextBox ApiTokenTextBox;
-        public Button connectButton;
+        private NetworkSectionControl _networkSectionControl = new();
+        private MembersListControl _membersListControl = new();
+        private TextBlock _errorText = new();
+        public TextBox ApiTokenTextBox = new();
+        public Button connectButton = new();
 
         public MainWindow()
         {
             InitializeComponent();
-            networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");
-            membersListControl = (MembersListControl)FindName("MembersListControl");
-            ApiTokenTextBox = (TextBox)FindName("ApiToken");
-            connectButton = (Button)FindName("ConnectButton");
-        
+            InitializeControls();
+            InitializeEventHandlers();
+        }
+
+        private void InitializeControls()
+        {
+            // Utiliser FindName avec vérification de null
+            _networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl")
+                                    ?? throw new NullReferenceException("NetworkSectionControl non trouvé");
+
+            _membersListControl = (MembersListControl)FindName("MembersListControl")
+                                 ?? throw new NullReferenceException("MembersListControl non trouvé");
+
+            _errorText = (TextBlock)FindName("ErrorText") ?? new TextBlock();
+
+            ApiTokenTextBox = (TextBox)FindName("ApiToken")
+                              ?? throw new NullReferenceException("ApiToken non trouvé");
+
+            connectButton = (Button)FindName("ConnectButton")
+                            ?? throw new NullReferenceException("ConnectButton non trouvé");
+
             // Passer l'APIClient à chaque contrôle
-            networkSectionControl.Initialize(apiClient);
-            membersListControl.Initialize(apiClient);
+            _networkSectionControl.Initialize(apiClient);
+            _membersListControl.Initialize(apiClient);
+        }
 
-            // Abonnement à l'événement
-            networkSectionControl.NetworkSelectedEvent += OnNetworkSelected; // TODO corriger le warning null
-
-            errorText = (TextBlock)FindName("ErrorText");
+        private void InitializeEventHandlers()
+        {
+            // Abonnement à l'événement NetworkSelectedEvent avec vérification de nullabilité
+            _networkSectionControl.NetworkSelectedEvent += OnNetworkSelected;
         }
 
         private void ApiToken_TextChanged(object sender, TextChangedEventArgs e)
@@ -53,13 +70,13 @@ namespace ZeroTier
             if (string.IsNullOrWhiteSpace(apiToken) || apiToken.Length != 32 || !Regex.IsMatch(apiToken, tokenPattern))
             {
                 connectButton.IsEnabled = false;
-                errorText.Text = "Le Token doit contenir exactement 32 caractères alphanumériques.";
-                errorText.Visibility = Visibility.Visible;
+                _errorText.Text = "Le Token doit contenir exactement 32 caractères alphanumériques.";
+                _errorText.Visibility = Visibility.Visible;
             }
             else
             {
                 connectButton.IsEnabled = true;
-                errorText.Visibility = Visibility.Collapsed;
+                _errorText.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -67,10 +84,10 @@ namespace ZeroTier
         {
             string apiToken = ApiTokenTextBox.Text;
 
-            ApiToken_Validation(apiToken, errorText);
+            ApiToken_Validation(apiToken, _errorText);
             
             // Si le message d'erreur est visible, on annule la connexion
-            if (errorText.Visibility == Visibility.Visible)
+            if (_errorText.Visibility == Visibility.Visible)
             {
                 return;
             }
@@ -84,8 +101,8 @@ namespace ZeroTier
             }
             else
             {
-                networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");                    
-                networkSectionControl.networkListControl.networksGrid.ItemsSource = networks;
+                _networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");                    
+                _networkSectionControl.NetworkListControl.NetworksGrid.ItemsSource = networks;
             }
         }
 
@@ -113,13 +130,19 @@ namespace ZeroTier
         {
             if (selectedNetwork != null)
             {
-                var networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");
-                networkSectionControl.networkDetailsControl.DisplayNetworkDetails(selectedNetwork);
-                networkSectionControl.networkAdditionalDetailsControl.DisplayNetworkAdditionalDetails(selectedNetwork);
-                await membersListControl.LoadMembers(selectedNetwork.Id);
+                _networkSectionControl.NetworkEditionControl.SelectedNetwork = selectedNetwork;
+
+                try
+                {
+                    await _membersListControl.LoadMembers(selectedNetwork.Id);
+                }
+                catch (Exception ex)
+                {
+                    _errorText.Text = $"Error loading members : {ex.Message}";
+                }
             }
         }
-        
+
         // Gestion du clic sur le lien Hyperlink
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {

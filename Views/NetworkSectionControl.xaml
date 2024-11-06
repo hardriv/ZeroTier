@@ -1,6 +1,7 @@
 <UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ZeroTier.Views" xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ZeroTier.Views" 
+             xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:NetworkModels="clr-namespace:ZeroTier.ViewModels.NetworkModels" 
              mc:Ignorable="av" 
@@ -31,7 +32,9 @@
             <local:NetworkListControl x:Name="NetworkListControl" Grid.Row="1" />
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,10,0,0">
+        <local:NetworkEditionControl x:Name="NetworkEditionControl" Grid.Row="1" />
+        
+        <!--<Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,10,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
@@ -332,7 +335,6 @@
                                            HorizontalAlignment="Left" VerticalAlignment="Top" 
                                            Margin="5,2" FontWeight="Bold" />
 
-                                <!-- IP Addresses -->
                                 <TextBlock Text="10.147.17.*" Grid.Row="1" Grid.Column="0" Margin="2" 
                                            Style="{StaticResource SelectableTextBlockStyle}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
                                 <TextBlock Text="10.147.18.*" Grid.Row="1" Grid.Column="1" Margin="2" 
@@ -453,6 +455,6 @@
                     HorizontalAlignment="Center" VerticalAlignment="Top" 
                     Width="140" Height="28" />
 
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>

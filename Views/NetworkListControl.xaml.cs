@@ -10,30 +10,28 @@ namespace ZeroTier.Views
 {
     public partial class NetworkListControl : UserControl
     {
-        private APIClient apiClient = new();
-        public DataGrid networksGrid = new();
-        public DataGrid MembersGrid = new();
-        public event EventHandler<NetworkViewModel> NetworkSelected = delegate { };
+        private APIClient? _apiClient;
+        private DataGrid _networksGrid;
+        
+        public event EventHandler<NetworkViewModel>? NetworkSelected = delegate { };
 
         public NetworkListControl()
         {
             InitializeComponent();
-
-            networksGrid = (DataGrid)FindName("NetworksGrid");
-            networksGrid.SelectionChanged += NetworksGrid_SelectionChanged;
+            _networksGrid = (DataGrid)FindName("NetworksGrid") ?? throw new NullReferenceException("NetworksGrid non trouvé");
+            _networksGrid.SelectionChanged += NetworksGrid_SelectionChanged;
         }
-        
-        // Si tu as besoin de passer l'APIClient, fais-le par une méthode ou propriété
+
+        // Méthode pour initialiser l'API client
         public void Initialize(APIClient apiClient)
         {
-            this.apiClient = apiClient;
+            this._apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
         }
 
         private void NetworksGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (networksGrid.SelectedItem is NetworkViewModel selectedNetwork)
+            if (_networksGrid.SelectedItem is NetworkViewModel selectedNetwork)
             {
-                Debug.WriteLine("NetworksGrid_SelectionChanged");
                 NetworkSelected?.Invoke(this, selectedNetwork);
             }
         }
@@ -46,11 +44,11 @@ namespace ZeroTier.Views
                                               "Confirmation de suppression", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
-                    bool isDeleted = await NetworkService.DeleteNetwork(apiClient, network.Id);
+                    bool isDeleted = await NetworkService.DeleteNetwork(_apiClient, network.Id);
                     if (isDeleted)
                     {
-                        var networks = await NetworkService.GetNetworks(apiClient);
-                        networksGrid.ItemsSource = networks;
+                        var networks = await NetworkService.GetNetworks(_apiClient);
+                        _networksGrid.ItemsSource = networks;
                     }
                     else
                     {
