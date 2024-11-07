@@ -55,15 +55,58 @@ namespace ZeroTier.Views
 
         private void OnSelectedNetworkChanged()
         {
-            if (SelectedNetwork != null)
+            if (_selectedNetwork != null)
             {
-                NetworkId.Text = $"{SelectedNetwork.Id}";
-                InitializeSelectedIp();
+                BindingBasicInformations();
+                BindingAdvancedInformations();
             }
             else
             {
                 NetworkId.Text = "Aucun réseau sélectionné";
             }
+        }
+
+        private void BindingBasicInformations()
+        {
+            NetworkId.Text = _selectedNetwork.Id;
+            NetworkName.Text = _selectedNetwork.Config.Name;
+            Description.Text = _selectedNetwork.Description;
+
+            if (_selectedNetwork.Config.Private == true)
+            {
+                AccessControlPrivate.IsChecked = true;
+            }
+            else
+            {
+                AccessControlPublic.IsChecked = true;
+            }
+
+            MulticastCheckBox.IsChecked = _selectedNetwork.Config.EnableBroadcast;
+            if (_selectedNetwork.Config.MulticastLimit != null)
+            {
+                RecipientLimitTextBox.Text = _selectedNetwork.Config.MulticastLimit.ToString();
+            }
+
+            DnsDomainTextBox.Text = _selectedNetwork.Config.Dns.Domain;
+            DnsServerTextBox.Text = _selectedNetwork.Config.Dns.Servers?[0];
+
+            NetworkOnlineMembers.Text = _selectedNetwork.OnlineMemberCount.ToString();
+            NetworkAuthorizedMembers.Text = _selectedNetwork.AuthorizedMemberCount.ToString();
+            NetworkTotalMembers.Text = _selectedNetwork.TotalMemberCount.ToString();
+            NetworkCreatedTime.Text = _selectedNetwork.Config.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            NetworkModifiedTime.Text = _selectedNetwork.Config.LastModified.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                        
+        }
+
+        private void BindingAdvancedInformations()
+        {
+            //NetworkRoutesLAN.Text = _selectedNetwork.Config.Routes?[0].Target;
+            if (_selectedNetwork.Config.Routes?.Count > 0)
+            {
+                NetworkRoutes.ItemsSource = _selectedNetwork.Config.Routes;
+            }
+
+            InitializeSelectedIp();
         }
 
         private void InitializeSelectedIp()
@@ -81,6 +124,12 @@ namespace ZeroTier.Views
                     break;
                 }
             }
+
+            // IPV6AssignMode
+            IPv6RFC4193CheckBox.IsChecked = _selectedNetwork.Config.V6AssignMode.Rfc4193;
+            IPv66PLANECheckBox.IsChecked = _selectedNetwork.Config.V6AssignMode.Sixplane;
+            // Not Used
+            IPv6utoAssignCheckBox.IsEnabled = false;
         }
 
         private void IPv4AutoAssign_Checked(object sender, RoutedEventArgs e)
@@ -140,7 +189,8 @@ namespace ZeroTier.Views
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox checkBox = sender as CheckBox;
+            // Do nothing for now
+            /*CheckBox checkBox = sender as CheckBox;
             if (checkBox.IsChecked == true)
             {
                 // Vérifier si une autre checkbox est déjà sélectionnée
@@ -151,7 +201,7 @@ namespace ZeroTier.Views
                         cb.IsChecked = false;
                     }
                 }
-            }
+            }*/
         }
     }
 }

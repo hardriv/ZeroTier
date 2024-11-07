@@ -11,7 +11,7 @@ namespace ZeroTier.Views
     public partial class NetworkListControl : UserControl
     {
         private APIClient? _apiClient;
-        private DataGrid _networksGrid;
+        private readonly DataGrid _networksGrid;
         
         public event EventHandler<NetworkViewModel>? NetworkSelected = delegate { };
 
