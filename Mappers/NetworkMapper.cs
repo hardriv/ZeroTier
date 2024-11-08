@@ -3,12 +3,111 @@ using System.Collections.Generic;
 using ZeroTier.DTO.NetworkDtos;
 using ZeroTier.ViewModels.NetworkModels;
 using ZeroTier.Utils;
+using AutoMapper;
 
 namespace ZeroTier.Mappers
 {
-    public static class NetworkMapper
+    public class NetworkMapper
     {
-        public static NetworkViewModel NetworkToViewModel(NetworkDto dto)
+        private readonly IMapper _mapper;
+
+        public NetworkMapper()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                // Ajouter le profil de mappage complet pour tous les types
+                cfg.AddProfile<NetworkMappingProfile>();
+            });
+            _mapper = config.CreateMapper();
+        }
+
+        public List<NetworkViewModel> MapToViewModels(List<NetworkDto> dtos)
+        {
+            return _mapper.Map<List<NetworkViewModel>>(dtos);
+        }
+
+        public List<NetworkDto> MapToDtos(List<NetworkViewModel> viewModels)
+        {
+            return _mapper.Map<List<NetworkDto>>(viewModels);
+        }
+
+        // Conversion de NetworkDto vers NetworkViewModel
+        public NetworkViewModel MapToViewModel(NetworkDto dto)
+        {
+            return _mapper.Map<NetworkViewModel>(dto);
+        }
+
+        // Conversion de NetworkViewModel vers NetworkDto
+        public NetworkDto MapToDto(NetworkViewModel viewModel)
+        {
+            return _mapper.Map<NetworkDto>(viewModel);
+        }
+
+        // Conversion de List<IpAssignmentPoolDto> vers IpAssignmentPoolViewModel
+        public IpAssignmentPoolViewModel MapIpAssignmentPoolToViewModel(List<IpAssignmentPoolDto> ipAssignmentPoolDtos)
+        {
+            return _mapper.Map<IpAssignmentPoolViewModel>(ipAssignmentPoolDtos);
+        }
+
+        // Conversion de IpAssignmentPoolViewModel vers List<IpAssignmentPoolDto>
+        public List<IpAssignmentPoolDto> MapIpAssignmentPoolToDto(IpAssignmentPoolViewModel ipAssignmentPoolViewModel)
+        {
+            return _mapper.Map<List<IpAssignmentPoolDto>>(ipAssignmentPoolViewModel);
+        }
+
+        // Autres mappages pour les configurations et paramètres spécifiques
+        public NetworkConfigViewModel MapConfigToViewModel(NetworkConfigDto configDto)
+        {
+            return _mapper.Map<NetworkConfigViewModel>(configDto);
+        }
+
+        public NetworkConfigDto MapConfigToDto(NetworkConfigViewModel configViewModel)
+        {
+            return _mapper.Map<NetworkConfigDto>(configViewModel);
+        }
+
+        public DnsConfigViewModel MapDnsConfigToViewModel(DnsConfigDto dnsConfigDto)
+        {
+            return _mapper.Map<DnsConfigViewModel>(dnsConfigDto);
+        }
+
+        public DnsConfigDto MapDnsConfigToDto(DnsConfigViewModel dnsConfigViewModel)
+        {
+            return _mapper.Map<DnsConfigDto>(dnsConfigViewModel);
+        }
+
+        // Ajout de méthodes de mappage pour d'autres entités, si nécessaire
+        public PermissionsViewModel MapPermissionsToViewModel(PermissionsDto permissionsDto)
+        {
+            return _mapper.Map<PermissionsViewModel>(permissionsDto);
+        }
+
+        public PermissionsDto MapPermissionsToDto(PermissionsViewModel permissionsViewModel)
+        {
+            return _mapper.Map<PermissionsDto>(permissionsViewModel);
+        }
+
+        public RouteViewModel MapRouteToViewModel(RouteDto routeDto)
+        {
+            return _mapper.Map<RouteViewModel>(routeDto);
+        }
+
+        public RouteDto MapRouteToDto(RouteViewModel routeViewModel)
+        {
+            return _mapper.Map<RouteDto>(routeViewModel);
+        }
+
+        public SsoConfigViewModel MapSsoConfigToViewModel(SsoConfigDto ssoConfigDto)
+        {
+            return _mapper.Map<SsoConfigViewModel>(ssoConfigDto);
+        }
+
+        public SsoConfigDto MapSsoConfigToDto(SsoConfigViewModel ssoConfigViewModel)
+        {
+            return _mapper.Map<SsoConfigDto>(ssoConfigViewModel);
+        }
+
+        /*public static NetworkViewModel NetworkToViewModel(NetworkDto dto)
         {
             return new NetworkViewModel
             {
@@ -64,7 +163,7 @@ namespace ZeroTier.Mappers
                 Capabilities = dto.Capabilities,
                 EnableBroadcast = dto.EnableBroadcast,
                 Id = dto.Id,
-                IpAssignmentPools = IpAssignmentPoolToViewModels(dto.IpAssignmentPools),
+                IpAssignmentPool = IpAssignmentPoolToViewModel(dto.IpAssignmentPools),
                 LastModified = DateTimeUtils.FromUnixTimeMilliseconds(dto.LastModified),
                 Mtu = dto.Mtu,
                 MulticastLimit = dto.MulticastLimit,
@@ -127,46 +226,26 @@ namespace ZeroTier.Mappers
             };
         }
 
-        public static IpAssignmentPoolViewModel IpAssignmentPoolToViewModel(IpAssignmentPoolDto dto)
+        public static IpAssignmentPoolViewModel IpAssignmentPoolToViewModel(List<IpAssignmentPoolDto> dtos)
         {
+            if (dtos.Count==0) {
+                return new();
+            }
+
             return new IpAssignmentPoolViewModel
             {
-                IpRangeStart = dto.IpRangeStart,
-                IpRangeEnd = dto.IpRangeEnd
+                IpRangeStart = dtos[0].IpRangeStart,
+                IpRangeEnd = dtos[0].IpRangeEnd
             };
         }
 
-        public static IpAssignmentPoolDto IpAssignmentPoolToDto(IpAssignmentPoolViewModel viewModel)
+        public static List<IpAssignmentPoolDto> IpAssignmentPoolToDto(IpAssignmentPoolViewModel viewModel)
         {
-            return new IpAssignmentPoolDto
+            return [new IpAssignmentPoolDto
             {
                 IpRangeStart = viewModel.IpRangeStart,
                 IpRangeEnd = viewModel.IpRangeEnd
-            };
-        }
-
-        public static List<IpAssignmentPoolViewModel> IpAssignmentPoolToViewModels(List<IpAssignmentPoolDto> dtos)
-        {
-            List<IpAssignmentPoolViewModel> viewModels = new List<IpAssignmentPoolViewModel>();
-            foreach (var dto in dtos)
-            {
-                IpAssignmentPoolViewModel viewModel = IpAssignmentPoolToViewModel(dto);
-                viewModels.Add(viewModel);
-            }
-
-            return viewModels;
-        }
-
-        public static List<IpAssignmentPoolDto> IpAssignmentPoolToDtos(List<IpAssignmentPoolViewModel> viewModels)
-        {
-            List<IpAssignmentPoolDto> dtos = new List<IpAssignmentPoolDto>();
-            foreach (var viewModel in viewModels)
-            {
-                IpAssignmentPoolDto dto = IpAssignmentPoolToDto(viewModel);
-                dtos.Add(dto);
-            }
-
-            return dtos;
+            }];
         }
 
         public static PermissionsViewModel? PermissionsToViewModel(PermissionsDto dto)
@@ -423,6 +502,6 @@ namespace ZeroTier.Mappers
                 dtoList.Add(NetworkToDto(viewModel));
             }
             return dtoList;
-        }
+        }*/
     }
 }

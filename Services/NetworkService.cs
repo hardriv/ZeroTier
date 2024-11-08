@@ -10,12 +10,15 @@ using ZeroTier.Utils;
 using ZeroTier.DTO.NetworkDtos;
 using System.Collections.ObjectModel;
 using ZeroTier.Mappers;
+using AutoMapper;
 
 namespace ZeroTier.Services
 {
-    public static class NetworkService
+    public class NetworkService(NetworkMapper mapper)
     {
-        public static async Task<ObservableCollection<NetworkViewModel>?> GetNetworks(APIClient apiClient)
+        private readonly NetworkMapper _mapper = mapper;
+
+        public async Task<ObservableCollection<NetworkViewModel>?> GetNetworks(APIClient apiClient)
         {
             HttpResponseMessage response = await apiClient.GetAsync("network");
 
@@ -25,10 +28,23 @@ namespace ZeroTier.Services
                 return [];
             }
             
-            return new ObservableCollection<NetworkViewModel>(NetworkMapper.NetworksToViewModels(dtos));
+            return new ObservableCollection<NetworkViewModel>(_mapper.MapToViewModels(dtos));
         }
 
-        public static async Task<bool> DeleteNetwork(APIClient apiClient, string networkId)
+        public async Task<NetworkViewModel> GetNetworkById(APIClient apiClient, string networkId)
+        {
+            HttpResponseMessage response = await apiClient.GetAsync($"network/{networkId}");
+
+            NetworkDto dto = await response.Content.ReadFromJsonAsync<NetworkDto>();
+            if (dto == null)
+            {
+                return null;
+            }
+
+            return _mapper.MapToViewModel(dto);
+        }
+
+        public async Task<bool> DeleteNetwork(APIClient apiClient, string networkId)
         {
             HttpResponseMessage response = await apiClient.DeleteAsync($"network/{networkId}");
 
@@ -38,7 +54,7 @@ namespace ZeroTier.Services
             }
             else
             {
-                MessageBox.Show($"Erreur : {(int)response.StatusCode} - {response.ReasonPhrase}");
+                MessageBox.Show($"Error : {(int)response.StatusCode} - {response.ReasonPhrase}");
                 return false;
             }
         }

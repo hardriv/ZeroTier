@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ZeroTier.Services;
 using ZeroTier.Utils;
 using ZeroTier.ViewModels.NetworkModels;
 
@@ -25,6 +26,7 @@ namespace ZeroTier.Views
     public partial class NetworkEditionControl : UserControl
     {
         private APIClient? _apiClient;
+        private NetworkService? _networkService;
         private NetworkViewModel? _selectedNetwork;
         private TextBlock? _selectedTextBlock;
 
@@ -41,16 +43,17 @@ namespace ZeroTier.Views
             }
         }
 
-        public event EventHandler<NetworkViewModel>? NetworkSelectedEvent;
+        //public event EventHandler<NetworkViewModel>? NetworkSelectedEvent;
 
         public NetworkEditionControl()
         {
             InitializeComponent();
         }
 
-        public void Initialize(APIClient apiClient)
+        public void Initialize(APIClient apiClient, NetworkService networkService)
         {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
+            this._apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
+            this._networkService = networkService;
         }
 
         private void OnSelectedNetworkChanged()
@@ -82,13 +85,10 @@ namespace ZeroTier.Views
             }
 
             MulticastCheckBox.IsChecked = _selectedNetwork.Config.EnableBroadcast;
-            if (_selectedNetwork.Config.MulticastLimit != null)
-            {
-                RecipientLimitTextBox.Text = _selectedNetwork.Config.MulticastLimit.ToString();
-            }
-
+            RecipientLimitTextBox.Text = _selectedNetwork.Config.MulticastLimit.ToString();
+            
             DnsDomainTextBox.Text = _selectedNetwork.Config.Dns.Domain;
-            DnsServerTextBox.Text = _selectedNetwork.Config.Dns.Servers?[0];
+            //DnsServerTextBox.Text = _selectedNetwork.Config.Dns.Servers?[0];
 
             NetworkOnlineMembers.Text = _selectedNetwork.OnlineMemberCount.ToString();
             NetworkAuthorizedMembers.Text = _selectedNetwork.AuthorizedMemberCount.ToString();

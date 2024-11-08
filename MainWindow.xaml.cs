@@ -17,9 +17,12 @@ namespace ZeroTier
         private readonly APIClient apiClient = new();
         private NetworkSectionControl _networkSectionControl = new();
         private MembersListControl _membersListControl = new();
+        private readonly NetworkService _networkService = new(new());
+        //private MemberService memberService;
+
         private TextBlock _errorText = new();
-        public TextBox ApiTokenTextBox = new();
-        public Button connectButton = new();
+        private TextBox ApiTokenTextBox = new();
+        private Button connectButton = new();
 
         public MainWindow()
         {
@@ -46,7 +49,7 @@ namespace ZeroTier
                             ?? throw new NullReferenceException("ConnectButton non trouvé");
 
             // Passer l'APIClient à chaque contrôle
-            _networkSectionControl.Initialize(apiClient);
+            _networkSectionControl.Initialize(apiClient, _networkService);
             _membersListControl.Initialize(apiClient);
         }
 
@@ -94,14 +97,15 @@ namespace ZeroTier
 
             apiClient.SetApiToken(apiToken);
             
-            ObservableCollection<NetworkViewModel> networks = new(await NetworkService.GetNetworks(apiClient) ?? []);
+            ObservableCollection<NetworkViewModel> networks = new(await _networkService.GetNetworks(apiClient) ?? []);
             if (networks == null || networks.Count == 0)
             {
                 MessageBox.Show("No networks found or networks list is null.");
             }
             else
             {
-                _networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");                    
+                //_networkSectionControl = (NetworkSectionControl)FindName("NetworkSectionControl");   
+                //_networkSectionControl.Initialize(apiClient, _networkService);
                 _networkSectionControl.NetworkListControl.NetworksGrid.ItemsSource = networks;
             }
         }
@@ -130,7 +134,8 @@ namespace ZeroTier
         {
             if (selectedNetwork != null)
             {
-                _networkSectionControl.NetworkEditionControl.SelectedNetwork = selectedNetwork;
+                NetworkViewModel network = await _networkService.GetNetworkById(apiClient, selectedNetwork.Id);
+                _networkSectionControl.NetworkEditionControl.SelectedNetwork = network;
 
                 try
                 {

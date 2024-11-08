@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 namespace ZeroTier.ViewModels.NetworkModels
 {
@@ -9,7 +10,7 @@ namespace ZeroTier.ViewModels.NetworkModels
         public List<object>? Capabilities { get; set; }
         public bool EnableBroadcast { get; set; }
         public required string Id { get; set; }
-        public List<IpAssignmentPoolViewModel> IpAssignmentPools { get; set; } = [];
+        public IpAssignmentPoolViewModel IpAssignmentPool { get; set; } = new();
         public DateTime LastModified { get; set; }
         public int Mtu { get; set; }
         public int MulticastLimit { get; set; }
@@ -19,10 +20,10 @@ namespace ZeroTier.ViewModels.NetworkModels
         public string? RemoteTraceTarget { get; set; }
         public List<RouteViewModel> Routes { get; set; } = [];
         public List<RuleViewModel> Rules { get; set; } = [];
-        public List<object>? Tags { get; set; } = new List<object>();
-        public V4AssignModeViewModel V4AssignMode { get; set; } = new V4AssignModeViewModel();
-        public V6AssignModeViewModel V6AssignMode { get; set; } = new V6AssignModeViewModel();
-        public DnsConfigViewModel Dns { get; set; } = new DnsConfigViewModel();
-        public SsoConfigViewModel SsoConfig { get; set; } = new SsoConfigViewModel();
+        public List<object>? Tags { get; set; } = [];
+        public V4AssignModeViewModel V4AssignMode { get; set; } = new();
+        public V6AssignModeViewModel V6AssignMode { get; set; } = new();
+        public DnsConfigViewModel Dns { get; set; } = new();
+        public SsoConfigViewModel SsoConfig { get; set; } = new();
     }
 }

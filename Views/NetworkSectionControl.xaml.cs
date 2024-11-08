@@ -10,6 +10,7 @@ using System.Net;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using ZeroTier.Services;
 
 namespace ZeroTier.Views
 {
@@ -40,19 +41,19 @@ namespace ZeroTier.Views
         {
             if (_networkListControl != null)
             {
-                _networkListControl.NetworkSelected += OnNetworkSelected;
+                _networkListControl.NetworkSelectedEvent += OnNetworkSelected;
             }
 
-            if (_networkEditionControl != null)
+            /*if (_networkEditionControl != null)
             {
                 _networkEditionControl.NetworkSelectedEvent += OnNetworkSelected;
-            }
+            }*/
         }
 
-        public void Initialize(APIClient apiClient)
+        public void Initialize(APIClient apiClient, NetworkService networkService)
         {
-            _networkListControl?.Initialize(apiClient);
-            _networkEditionControl?.Initialize(apiClient);
+            _networkListControl?.Initialize(apiClient, networkService);
+            _networkEditionControl?.Initialize(apiClient, networkService);
         }
 
         public void OnNetworkSelected(object sender, NetworkViewModel selectedNetwork)
