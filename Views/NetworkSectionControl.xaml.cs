@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 using ZeroTier.ViewModels.NetworkModels;
-using ZeroTier.Utils;
+using ZeroTier.Config;
 using ZeroTier.Services;
 
 namespace ZeroTier.Views

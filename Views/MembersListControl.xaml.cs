@@ -1,11 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ZeroTier.ViewModels.MemberModels;
 using ZeroTier.Services;
-using ZeroTier.Utils;
+using ZeroTier.Config;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 

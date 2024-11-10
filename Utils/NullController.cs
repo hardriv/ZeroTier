@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace ZeroTier.Utils
 {
     public static class NullController

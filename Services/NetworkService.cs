@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using ZeroTier.ViewModels.NetworkModels;
 using System.Windows;
-using ZeroTier.Utils;
+using ZeroTier.Config;
 using ZeroTier.DTO.NetworkDtos;
 using System.Collections.ObjectModel;
 using ZeroTier.Mappers;
