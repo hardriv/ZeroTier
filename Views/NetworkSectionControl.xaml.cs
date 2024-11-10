@@ -1,15 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using ZeroTier.ViewModels.NetworkModels;
 using ZeroTier.Utils;
-using System.Windows.Media.Animation;
-using System.Net;
-using System.Windows.Input;
-using System.Text.RegularExpressions;
-using System.Diagnostics;
 using ZeroTier.Services;
 
 namespace ZeroTier.Views

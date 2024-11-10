@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +16,7 @@ namespace ZeroTier
         private readonly APIClient apiClient = new();
         private NetworkSectionControl _networkSectionControl = new();
         private MembersListControl _membersListControl = new();
-        private readonly NetworkService _networkService = new(new());
+        private readonly NetworkService _networkService = new();
         //private MemberService memberService;
 
         private TextBlock _errorText = new();

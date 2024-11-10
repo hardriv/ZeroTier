@@ -1,10 +1,8 @@
 using System.Windows.Controls;
 using System.Windows;
-using System.Windows.Input;
 using ZeroTier.ViewModels.NetworkModels;
 using ZeroTier.Services;
 using ZeroTier.Utils;
-using System.Diagnostics;
 
 namespace ZeroTier.Views
 {

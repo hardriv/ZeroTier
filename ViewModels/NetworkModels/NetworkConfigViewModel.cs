@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-
 namespace ZeroTier.ViewModels.NetworkModels
 {
     public class NetworkConfigViewModel
@@ -10,7 +7,7 @@ namespace ZeroTier.ViewModels.NetworkModels
         public List<object>? Capabilities { get; set; }
         public bool EnableBroadcast { get; set; }
         public required string Id { get; set; }
-        public IpAssignmentPoolViewModel IpAssignmentPool { get; set; } = new();
+        public List<IpAssignmentPoolViewModel> IpAssignmentPools { get; set; } = [];
         public DateTime LastModified { get; set; }
         public int Mtu { get; set; }
         public int MulticastLimit { get; set; }
