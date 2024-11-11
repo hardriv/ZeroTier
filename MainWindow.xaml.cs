@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using ZeroTier.ViewModels.NetworkModels;
 using ZeroTier.Services;
-using ZeroTier.Utils;
+using ZeroTier.Config;
 using ZeroTier.Views;
 using System.Collections.ObjectModel;
 
