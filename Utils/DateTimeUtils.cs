@@ -1,5 +1,3 @@
-using System;
-
 namespace ZeroTier.Utils
 {
     public static class DateTimeUtils

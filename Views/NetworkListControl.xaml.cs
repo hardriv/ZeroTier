@@ -2,7 +2,7 @@ using System.Windows.Controls;
 using System.Windows;
 using ZeroTier.ViewModels.NetworkModels;
 using ZeroTier.Services;
-using ZeroTier.Utils;
+using ZeroTier.Config;
 
 namespace ZeroTier.Views
 {

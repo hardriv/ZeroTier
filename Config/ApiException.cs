@@ -1,5 +1,3 @@
-using System;
-
 namespace ZeroTier.Config
 {
     public class ApiException : Exception
